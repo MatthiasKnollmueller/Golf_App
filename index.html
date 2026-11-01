@@ -1,0 +1,1241 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Putting-Tempo</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Putting">
+<meta name="theme-color" content="#f3f5f1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111613" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:14px system-ui,-apple-system,sans-serif}
+img{max-width:100%}
+</style>
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap">
+<style>
+/* Layout: Ein-Bildschirm-App. Kopfzeile, scrollender Inhalt, feste Tab-Leiste unten – wie eine Scorekarte in der Hosentasche. */
+:root{
+  --bg:#f3f5f1; --surface:#ffffff; --surface-2:#e8ece5; --line:#d5dbd1;
+  --fg:#16201a; --muted:#5f6b62; --accent:#2f8a4c; --accent-ink:#ffffff; --accent-soft:#dcefe1;
+  --flag:#c9971c; --warn:#b4471f;
+  --f-display:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111613; --surface:#1a211c; --surface-2:#232c26; --line:#2e3831;
+  --fg:#eef2ec; --muted:#93a097; --accent:#4fb46b; --accent-ink:#08130b; --accent-soft:#1d3324;
+  --flag:#e2b23c; --warn:#ef7a52; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111613; --surface:#1a211c; --surface-2:#232c26; --line:#2e3831;
+  --fg:#eef2ec; --muted:#93a097; --accent:#4fb46b; --accent-ink:#08130b; --accent-soft:#1d3324;
+  --flag:#e2b23c; --warn:#ef7a52; color-scheme:dark}
+
+[hidden]{display:none!important}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.4;
+  -webkit-tap-highlight-color:transparent;overscroll-behavior:none}
+*{box-sizing:border-box}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+
+.app{height:100%;display:flex;flex-direction:column;max-width:560px;margin:0 auto}
+header.top{display:flex;align-items:center;gap:12px;padding-block:10px 12px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  border-bottom:1px solid var(--line)}
+header.top h1{flex:1;margin:0;font-family:var(--f-display);font-weight:700;font-size:1.5rem;letter-spacing:.01em;text-wrap:balance}
+.iconbtn{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;flex:none}
+.iconbtn svg{width:20px;height:20px;stroke:var(--fg);fill:none;stroke-width:1.8}
+
+main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-block:16px 24px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.view{display:flex;flex-direction:column;gap:20px}
+
+nav.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0;padding:8px;
+  padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px));
+  padding-bottom:calc(8px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);background:var(--bg)}
+nav.tabs button{border:0;background:transparent;border-radius:12px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:2px;
+  font-family:var(--f-display);font-weight:600;font-size:.95rem;color:var(--muted)}
+nav.tabs button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8}
+nav.tabs button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink)}
+
+/* Regler */
+.ctl{display:flex;flex-direction:column;gap:6px}
+.ctl-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.ctl-label{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.ctl-val{font-family:var(--f-display);font-weight:700;font-size:1.35rem}
+.ctl-ends{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:32px;background:transparent;margin:0}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:linear-gradient(to right,var(--accent) 0 var(--p,50%),var(--surface-2) var(--p,50%) 100%)}
+input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:linear-gradient(to right,var(--accent) 0 var(--p,50%),var(--surface-2) var(--p,50%) 100%)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;background:var(--surface);border:2px solid var(--accent);margin-top:-11px;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:var(--surface);border:2px solid var(--accent)}
+input[type=range].slope::-webkit-slider-runnable-track{background:linear-gradient(to right,var(--surface-2) 0 var(--a),var(--accent) var(--a) var(--b),var(--surface-2) var(--b) 100%)}
+input[type=range].slope::-moz-range-track{background:linear-gradient(to right,var(--surface-2) 0 var(--a),var(--accent) var(--a) var(--b),var(--surface-2) var(--b) 100%)}
+.row2{display:flex;gap:12px;align-items:flex-end}
+.row2 .ctl{flex:1;min-width:0}
+
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 14px;font-weight:600}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:transparent}
+.btn.outline{border-color:var(--accent);color:var(--accent);background:transparent}
+.btn.danger{border-color:var(--warn);color:var(--warn);background:transparent}
+.btn:disabled{opacity:.45;cursor:default}
+
+/* Distanztabelle */
+.chart-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+.chart-head h2{margin:0;font-family:var(--f-display);font-size:1.3rem;font-weight:700}
+.chart-head p{margin:2px 0 0;color:var(--muted);font-size:.88rem}
+.table{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);overflow:hidden}
+.thead,.trow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr) 64px;gap:10px;align-items:center;padding:10px 14px}
+.thead{background:var(--surface-2);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.thead span:last-child{text-align:right}
+.trow{border-top:1px solid var(--line);min-height:58px}
+.dist{font-family:var(--f-display);font-weight:700;font-size:1.25rem}
+.plays{font-size:.8rem;color:var(--muted);display:block;font-family:var(--f-body);font-weight:500}
+.plays.up{color:var(--warn)} .plays.down{color:var(--accent)}
+.bs{font-family:var(--f-display);font-weight:700;font-size:1.45rem;text-align:right}
+.bs small{font-size:.8rem;color:var(--muted);font-weight:600;margin-left:2px}
+/* Lineal: Ausholweg als Balken, Teilstriche alle 10 cm */
+.ruler{position:relative;height:12px;border-radius:2px;background:
+  repeating-linear-gradient(to right,var(--line) 0 1px,transparent 1px calc(100%/8))}
+.ruler i{position:absolute;left:0;top:3px;bottom:3px;border-radius:2px;background:var(--accent)}
+.edit-in{width:64px;justify-self:end;text-align:right;border:1px solid var(--accent);border-radius:10px;padding:6px 8px;background:var(--accent-soft);
+  font-family:var(--f-display);font-weight:700;font-size:1.25rem}
+.edit-note{border-radius:12px;background:var(--accent-soft);padding:10px 12px;font-size:.9rem}
+.trow.bad .edit-in{border-color:var(--warn)}
+.foot-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* Metronom */
+.beats{display:flex;justify-content:center;gap:18px;padding-top:12px}
+.beat{width:76px;height:76px;border-radius:50%;border:2px solid var(--line);background:var(--surface);display:grid;place-items:center;
+  font-family:var(--f-display);font-weight:700;font-size:1.8rem;transition:background .06s,border-color .06s,transform .06s}
+.beat.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);transform:scale(1.06)}
+.silent-row{display:flex;justify-content:center;gap:8px;min-height:22px}
+.sdot{width:18px;height:18px;border-radius:50%;border:2px solid var(--line);background:var(--surface)}
+.sdot.on{background:var(--flag);border-color:var(--flag)}
+.startbtn{align-self:center;min-width:200px;border:0;border-radius:999px;padding:18px 40px;font-family:var(--f-display);font-weight:700;font-size:1.5rem;
+  letter-spacing:.06em;background:var(--accent);color:var(--accent-ink)}
+.startbtn.running{background:var(--warn);color:#fff}
+.hint{color:var(--muted);font-size:.88rem;text-align:center;margin:0}
+.stepper{display:flex;gap:8px;align-items:center}
+.stepper button{width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font-weight:700;font-size:1.2rem}
+
+/* Runde */
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.seg button{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:10px;font-weight:600;color:var(--muted)}
+.seg button[aria-pressed="true"]{border-color:var(--accent);color:var(--fg);background:var(--accent-soft)}
+.start-round{display:flex;flex-direction:column;gap:12px;align-items:stretch;padding-top:20px;text-align:center}
+.start-round .seg button{padding:18px;font-family:var(--f-display);font-weight:700;font-size:1.3rem;background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.holes{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);overflow:hidden}
+.hole{border-top:1px solid var(--line);padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.hole:first-child{border-top:0}
+.hole-main{display:flex;align-items:center;gap:10px}
+.hno{width:22px;color:var(--muted);font-variant-numeric:tabular-nums}
+.hdist{flex:1;min-width:0;font-family:var(--f-display);font-weight:700;font-size:1.3rem}
+.hdist small{display:block;font-family:var(--f-body);font-size:.75rem;color:var(--muted);font-weight:500}
+.putts{display:flex;gap:4px}
+.putts button{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2);font-weight:700}
+.putts button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.miss{display:flex;align-items:center;gap:8px;padding-left:32px;font-size:.88rem;color:var(--muted);flex-wrap:wrap}
+.miss .sign{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.miss .sign button{border:0;background:transparent;padding:6px 10px;font-weight:600;color:var(--muted)}
+.miss .sign button[aria-pressed="true"]{background:var(--surface-2);color:var(--fg)}
+.miss input{width:64px;border:1px solid var(--line);border-radius:10px;padding:6px 8px;background:var(--surface-2);text-align:right}
+.miss .ok{color:var(--accent);font-weight:600}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stat{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:10px;text-align:center}
+.stat b{display:block;font-family:var(--f-display);font-size:1.6rem;font-weight:700}
+.stat span{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.pos{color:var(--accent)} .neg{color:var(--warn)}
+.res-list{display:flex;flex-direction:column;gap:8px}
+.res{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:12px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center}
+.res .when{font-weight:600}
+.res .meta{color:var(--muted);font-size:.85rem}
+.res .sg{font-family:var(--f-display);font-weight:700;font-size:1.3rem;text-align:right}
+.empty{border:1px dashed var(--line);border-radius:var(--r);padding:24px 16px;text-align:center;color:var(--muted)}
+.save-line{display:flex;gap:8px}
+.save-line .btn{flex:1}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(90px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);
+  padding:8px 14px;border-radius:999px;font-size:.9rem;z-index:30}
+
+/* Blätter (Einstellungen, Messen, Info) */
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:40;display:flex;align-items:flex-end;justify-content:center}
+.sheet{width:100%;max-width:560px;max-height:88%;overflow-y:auto;background:var(--bg);border-radius:18px 18px 0 0;padding-block:18px calc(20px + env(safe-area-inset-bottom,0px));
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:16px}
+.sheet h3{margin:0;font-family:var(--f-display);font-size:1.3rem}
+.sheet p{margin:0;color:var(--muted);font-size:.92rem;max-width:62ch}
+.level{height:120px;border-radius:12px;background:var(--surface);border:1px solid var(--line);position:relative;overflow:hidden}
+.level .ln{position:absolute;left:10%;right:10%;top:50%;height:4px;border-radius:2px;background:var(--accent);transform-origin:center}
+.level .rd{position:absolute;left:0;right:0;bottom:8px;text-align:center;font-family:var(--f-display);font-weight:700;font-size:1.6rem}
+.status{font-size:.88rem;color:var(--muted)}
+.status.err{color:var(--warn)}
+.sync{font-size:.75rem;color:var(--muted)}
+
+.modebar{padding-block:10px 0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+nav.tabs{grid-template-columns:none;grid-auto-columns:1fr;grid-auto-flow:column}
+/* Wedges */
+.grip-panel{display:grid;grid-template-columns:120px minmax(0,1fr);gap:12px;align-items:stretch;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:12px 12px 12px 6px}
+.grip-panel .wlist{background:var(--bg)}
+.grip-svg{width:120px;height:auto;touch-action:none;user-select:none;-webkit-user-select:none;cursor:ns-resize}
+.grip-svg:focus{outline:none}.grip-svg:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
+.grip-svg .body{fill:var(--surface-2);stroke:var(--line);stroke-width:1.5}
+.grip-svg .wrap{stroke:var(--line);stroke-width:1}
+.grip-svg .cap{fill:var(--fg)}
+.grip-svg .shaft{fill:var(--muted)}
+.grip-svg .tick{stroke:var(--muted);stroke-width:1}
+.grip-svg .tl{fill:var(--muted);font:600 9px var(--f-body)}
+.grip-svg .hand{fill:var(--accent);opacity:.28}
+.grip-svg .edge{stroke:var(--accent);stroke-width:3}
+.grip-svg .knob{fill:var(--accent)}
+.grip-svg .kt{fill:var(--accent-ink);font:700 11px var(--f-display);text-anchor:middle}
+.pside{display:flex;flex-direction:column;justify-content:space-between;gap:10px;min-width:0}
+.clock-row{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}
+.dial{width:100%;max-width:170px;height:auto}
+.dial .face{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+.dial .tk{stroke:var(--muted);stroke-width:1.2}
+.dial .tk.on{stroke:var(--accent);stroke-width:3}
+.dial text{fill:var(--muted);font:600 9px var(--f-body);text-anchor:middle;dominant-baseline:middle}
+.dial .fig{stroke:var(--fg);stroke-width:2.6;stroke-linecap:round;fill:none}
+.dial .head{fill:var(--fg)}
+.dial .club{stroke:var(--accent);stroke-width:2.4;stroke-linecap:round}
+.dial .clubhead{fill:var(--accent)}
+.dial .ghost{stroke:var(--line);stroke-width:1.6;stroke-dasharray:3 3}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 10px;font-weight:600;font-size:.88rem;font-variant-numeric:tabular-nums}
+.chips button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.wlist{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
+.wlist button{display:flex;justify-content:space-between;align-items:baseline;border:0;border-top:1px solid var(--line);background:transparent;padding:7px 10px;text-align:left}
+.wlist button:first-child{border-top:0}
+.wlist button[aria-pressed="true"]{background:var(--accent-soft)}
+.wlist .wl{font-weight:600}
+.wlist .wd{font-family:var(--f-display);font-weight:700;font-size:1.15rem}
+.gstep{display:flex;align-items:center;gap:8px}
+.gstep button{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font-weight:700}
+.gstep b{font-family:var(--f-display);font-size:1.15rem;min-width:56px;text-align:center}
+.target{display:flex;gap:8px;align-items:center}
+.target input{flex:1;min-width:0;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--surface);font-size:1rem}
+.sugg{display:flex;flex-direction:column;gap:6px}
+.sugg button{display:flex;justify-content:space-between;gap:8px;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:9px 12px;font-weight:600;text-align:left}
+.sugg button:first-child{border-color:var(--accent);background:var(--accent-soft)}
+.wtable-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+.wtable{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;min-width:330px}
+.wtable th{background:var(--surface-2);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:8px 4px;font-weight:600}
+.wtable th:first-child{text-align:left;padding-left:12px}
+.wtable td{border-top:1px solid var(--line);text-align:center;padding:0}
+.wtable td:first-child{text-align:left;padding:8px 12px;color:var(--muted);font-weight:600;white-space:nowrap}
+.wtable td button{width:100%;border:0;background:transparent;padding:9px 2px;font-family:var(--f-display);font-size:1.05rem;color:var(--muted)}
+.wtable td button.meas{color:var(--fg);font-weight:700}
+.wtable tr.cur td{background:var(--accent-soft)}
+.wtable td button.sel{outline:2px solid var(--accent);outline-offset:-3px;border-radius:8px;color:var(--fg)}
+.wtable td button.best{background:var(--flag);color:#1a1405;border-radius:8px}
+.wtable input{width:100%;max-width:58px;border:1px solid var(--accent);border-radius:8px;padding:5px 3px;margin:3px auto;display:block;text-align:center;background:var(--accent-soft);font-family:var(--f-display);font-size:1rem}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}
+.legend b{color:var(--fg)}
+.pfield{display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--muted);flex-wrap:wrap}
+.pfield select,.pfield input{border:1px solid var(--line);border-radius:10px;padding:6px 6px;background:var(--surface-2)}
+.pfield input{width:64px;text-align:right}
+.hole .chips button{padding:4px 8px;font-size:.82rem}
+.mini{display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr));gap:4px 10px;font-size:.88rem;font-variant-numeric:tabular-nums;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:10px 12px}
+.mini span:nth-child(-n+4){color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+@media (max-width:380px){.grip-panel{grid-template-columns:100px minmax(0,1fr)}.grip-svg{width:100px}}
+@media (prefers-reduced-motion:reduce){.beat{transition:none}}
+</style>
+
+<div class="app">
+  <header class="top">
+    <button class="iconbtn" id="btnSettings" aria-label="Einstellungen">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+    </button>
+    <h1 id="title">Distanztabelle</h1>
+    <button class="iconbtn" id="btnInfo" aria-label="Info">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/></svg>
+    </button>
+  </header>
+
+  <div class="modebar"><div class="seg" role="group" aria-label="Bereich">
+    <button id="mPutt" aria-pressed="true">Putten</button><button id="mPitch" aria-pressed="false">Chippen &amp; Pitchen</button>
+  </div></div>
+  <main id="main">
+    <!-- DISTANZTABELLE -->
+    <section class="view" id="v-chart">
+      <div class="seg" role="group" aria-label="Einheit">
+        <button id="uM" aria-pressed="true">Meter</button>
+        <button id="uS" aria-pressed="false">Schritte</button>
+      </div>
+      <div class="ctl">
+        <div class="ctl-head"><span class="ctl-label">Grüngeschwindigkeit</span><span class="ctl-val num" id="stimpVal">8 Stimp</span></div>
+        <input type="range" id="stimp" min="6" max="14" step="0.5" value="8" aria-label="Grüngeschwindigkeit in Stimp">
+        <div class="ctl-ends"><span>6 langsam</span><span>14 schnell</span></div>
+      </div>
+      <div class="row2">
+        <div class="ctl">
+          <div class="ctl-head"><span class="ctl-label">Gefälle</span><span class="ctl-val num" id="slopeVal">eben</span></div>
+          <input type="range" class="slope" id="slope" min="-7" max="7" step="0.5" value="0" aria-label="Gefälle in Prozent">
+          <div class="ctl-ends"><span>7 % bergab</span><span>eben</span><span>7 % bergauf</span></div>
+        </div>
+        <button class="btn outline" id="btnMeasure" style="margin-bottom:22px">Messen</button>
+      </div>
+
+      <div class="chart-head">
+        <div>
+          <h2>Ausholweg</h2>
+          <p id="chartSub">bei 79 bpm · 8 Stimp · eben</p>
+        </div>
+        <button class="btn" id="btnEdit">Bearbeiten</button>
+      </div>
+      <div class="edit-note" id="editNote" hidden></div>
+      <div class="table" id="chartTable"></div>
+      <div class="foot-actions" id="editActions" hidden>
+        <button class="btn primary" id="btnEditDone">Fertig</button>
+        <button class="btn ghost" id="btnEditCancel">Abbrechen</button>
+      </div>
+      <button class="btn" data-pdf>Tabellen als PDF exportieren</button>
+      <div class="sync" id="syncNote"></div>
+    </section>
+
+    <!-- METRONOM -->
+    <section class="view" id="v-metro" hidden>
+      <div class="beats">
+        <div class="beat" id="b1">1</div><div class="beat" id="b2">2</div><div class="beat" id="b3">3</div>
+      </div>
+      <div class="silent-row" id="silentRow"></div>
+      <div class="ctl">
+        <div class="ctl-head"><span class="ctl-label">Tempo</span><span class="ctl-val num" id="bpmVal">79 bpm</span></div>
+        <div class="stepper">
+          <button id="bpmDown" aria-label="Tempo langsamer">−</button>
+          <input type="range" id="bpm" min="60" max="120" step="1" value="79" aria-label="Tempo in Schlägen pro Minute">
+          <button id="bpmUp" aria-label="Tempo schneller">+</button>
+        </div>
+        <div class="ctl-ends"><span>60</span><span>120</span></div>
+      </div>
+      <div class="ctl">
+        <div class="ctl-head"><span class="ctl-label">Stille Schläge</span><span class="ctl-val num" id="silVal">1</span></div>
+        <input type="range" id="silent" min="0" max="8" step="1" value="1" aria-label="Anzahl stiller Schläge">
+        <div class="ctl-ends"><span>0</span><span>8</span></div>
+      </div>
+      <button class="startbtn" id="btnStart">START</button>
+      <p class="hint">1 = Ansprechen · 2 = Umkehrpunkt · 3 = Treffmoment. Die Distanztabelle gilt für das Tempo, mit dem du sie eingemessen hast.</p>
+    </section>
+
+    <!-- PERFORMANCE-TEST -->
+    <section class="view" id="v-test" hidden>
+      <div class="seg" role="tablist">
+        <button id="tabRound" aria-pressed="true">Runde</button>
+        <button id="tabResults" aria-pressed="false">Ergebnisse</button>
+      </div>
+      <div id="roundArea"></div>
+      <div id="resultsArea" hidden></div>
+    </section>
+
+    <!-- WEDGE-TABELLE -->
+    <section class="view" id="v-pchart" hidden>
+      <div class="seg" role="group" aria-label="Einheit">
+        <button id="puM" aria-pressed="true">Meter</button>
+        <button id="puS" aria-pressed="false">Schritte</button>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label">Zieldistanz</span>
+        <div class="target"><input id="tgt" type="number" inputmode="decimal" min="1" max="90" placeholder="z. B. 32" aria-label="Zieldistanz"><span id="tgtUnit">m</span></div>
+        <div class="sugg" id="sugg"></div>
+      </div>
+      <div class="grip-panel">
+        <svg class="grip-svg" id="gripSvg" viewBox="0 0 120 410" role="slider" tabindex="0" aria-label="Unterkante linke Hand in Zentimetern ab dem unteren Griffende" aria-valuemin="-3" aria-valuemax="18"></svg>
+        <div class="pside">
+          <div class="clock-row">
+            <svg class="dial" id="dial" viewBox="0 0 120 120" role="slider" tabindex="0" aria-label="Ausholposition – Schläger ziehen" style="touch-action:none;cursor:grab"></svg>
+            <div><div class="ctl-label">Ausholen bis</div><div class="ctl-val num" id="clockVal">Brust · 9:00</div></div>
+          </div>
+          <div class="wlist" id="wList" role="group" aria-label="Wedges"></div>
+        </div>
+      </div>
+      <div class="chart-head">
+        <div><h2 id="pH">Carry in Metern</h2><p id="pSub">Ausholen bis 9:00 Uhr</p></div>
+        <button class="btn" id="pEdit">Bearbeiten</button>
+      </div>
+      <div class="edit-note" id="pNote" hidden></div>
+      <div class="wtable-wrap"><table class="wtable" id="wTable"></table></div>
+      <div class="legend" id="pLegend"><span><b>fett</b> = von dir gemessen</span><span>grau = berechnet (ab 2 Messungen pro Wedge)</span><span>leer = noch kein Wert</span><span>Zelle antippen = Griff &amp; Wedge setzen</span></div>
+      <button class="btn" data-pdf>Tabellen als PDF exportieren</button>
+      <div class="foot-actions" id="pActions" hidden>
+        <button class="btn primary" id="pDone">Fertig</button>
+        <button class="btn ghost" id="pCancel">Abbrechen</button>
+        <button class="btn danger" id="pClear">Eigene Werte dieser Uhrzeit löschen</button>
+      </div>
+    </section>
+
+    <!-- WEDGE-TEST -->
+    <section class="view" id="v-ptest" hidden>
+      <div class="seg">
+        <button id="ptRound" aria-pressed="true">Runde</button>
+        <button id="ptResults" aria-pressed="false">Ergebnisse</button>
+      </div>
+      <div id="pRoundArea"></div>
+      <div id="pResultsArea" hidden></div>
+    </section>
+  </main>
+
+  <nav class="tabs" role="tablist">
+    <button data-v="chart" aria-selected="true"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/><path d="M9 4v16"/></svg>Tabelle</button>
+    <button data-v="metro" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M8 21h8l-2-17h-4z"/><path d="M12 15l5-9"/></svg>Metronom</button>
+    <button data-v="test" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M6 21V3l11 4-11 4"/><circle cx="16" cy="19" r="2"/></svg>Test</button>
+    <button data-v="pchart" aria-selected="false" hidden><svg viewBox="0 0 24 24"><path d="M10 3v13"/><path d="M10 16l6 3-2 2-5-2"/><path d="M7 5h6M7 8h6"/></svg>Griff &amp; Tabelle</button>
+    <button data-v="ptest" aria-selected="false" hidden><svg viewBox="0 0 24 24"><path d="M6 21V3l11 4-11 4"/><circle cx="16" cy="19" r="2"/></svg>Test</button>
+  </nav>
+</div>
+
+<div id="sheetHost"></div>
+<div id="toastHost"></div>
+
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const DEFAULT_BASE=[20,27,32,37,41,45,48,51,54,56,59,61,63,66,68];
+// Schritte: +5 cm pro Schritt bis 10 Schritte, danach +2,5 cm
+const DEFAULT_STEPS=Array.from({length:20},(_,i)=>{const n=i+1;return n<=10?5*n+5:55+2.5*(n-10)});
+const stepM=()=>S.stepCm/100; // eigene Schrittlänge
+
+/* ---------- Zustand ---------- */
+const S={base:DEFAULT_BASE.slice(),baseSteps:DEFAULT_STEPS.slice(),unit:"m",stepCm:91,refStimp:8,stimp:8,slope:0,bpm:79,silent:1,rounds:[]};
+let editing=null; // Kopie der Werte im Bearbeitungsmodus
+let round=null;   // laufende Runde
+
+function lsGet(k){try{const v=localStorage.getItem(k);return v?JSON.parse(v):null}catch(e){return null}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+
+const cached=lsGet("pt.settings"); if(cached) applySettings(cached);
+const cachedRounds=lsGet("pt.rounds"); if(cachedRounds&&Array.isArray(cachedRounds.list)) S.rounds=cachedRounds.list;
+round=lsGet("pt.round");
+
+function applySettings(d){
+  if(Array.isArray(d.base)&&d.base.length===15&&d.base.every(n=>typeof n==="number"&&n>0)) S.base=d.base.slice();
+  if(Array.isArray(d.baseSteps)&&d.baseSteps.length===20&&d.baseSteps.every(n=>typeof n==="number"&&n>0)) S.baseSteps=d.baseSteps.slice();
+  if(d.unit==="m"||d.unit==="steps") S.unit=d.unit;
+  for(const k of ["refStimp","stimp","slope","bpm","silent","stepCm"]) if(typeof d[k]==="number") S[k]=d[k];
+}
+function settingsDoc(){return{base:S.base,baseSteps:S.baseSteps,unit:S.unit,stepCm:S.stepCm,refStimp:S.refStimp,stimp:S.stimp,slope:S.slope,bpm:S.bpm,silent:S.silent}}
+
+/* ---------- Speicher (db pro Person, sonst nur dieses Gerät) ---------- */
+let db=null, uid=null, settingsRef=null, roundsRef=null, lastWritten={s:"",r:""}, sDirty=false;
+const syncNote=$("#syncNote");
+async function initStore(){
+  const use=window.claude&&window.claude.use;
+  if(!use){syncNote.textContent="Gespeichert auf diesem Gerät.";return}
+  try{
+    const [d,u]=await Promise.all([window.claude.use("db"),window.claude.use("user")]);
+    if(!d||!u){syncNote.textContent="Gespeichert auf diesem Gerät.";return}
+    const id=await u.id(); if(!id){syncNote.textContent="Gespeichert auf diesem Gerät.";return}
+    db=d; uid=id;
+    settingsRef=db.doc("data/users/"+uid+"/settings");
+    roundsRef=db.doc("data/users/"+uid+"/rounds");
+    const timer=setTimeout(()=>{syncNote.textContent="Konto-Speicher gerade nicht erreichbar – Werte bleiben auf diesem Gerät."},10000);
+    settingsRef.onSnapshot(snap=>{
+      if(!snap.metadata.fromCache) clearTimeout(timer);
+      syncNote.textContent="In deinem Konto gespeichert – auch auf anderen Geräten verfügbar.";
+      if(snap.exists){
+        const data=snap.data(); const j=JSON.stringify(data);
+        if(j!==lastWritten.s && !snap.metadata.hasPendingWrites && !sDirty && !sBusy){applySettings(data);lastWritten.s=j;lsSet("pt.settings",settingsDoc());syncControls();render()}
+      }else if(!snap.metadata.fromCache && cached){ saveSettings(true) }
+    },()=>{clearTimeout(timer);syncNote.textContent="Gespeichert auf diesem Gerät."});
+    roundsRef.onSnapshot(snap=>{
+      if(snap.exists){const l=snap.data().list; if(Array.isArray(l)){S.rounds=l.slice();lsSet("pt.rounds",{list:S.rounds});renderResults()}}
+      else if(!snap.metadata.fromCache && S.rounds.length){ saveRounds() }
+    },()=>{});
+  }catch(e){syncNote.textContent="Gespeichert auf diesem Gerät."}
+}
+let sTimer=null, sBusy=false, sAgain=false;
+function saveSettings(now){
+  lsSet("pt.settings",settingsDoc());
+  if(!settingsRef) return;
+  sDirty=true;
+  clearTimeout(sTimer);
+  sTimer=setTimeout(flushSettings, now?0:900);
+}
+async function flushSettings(){
+  if(sBusy){sAgain=true;return}
+  const d=settingsDoc(), j=JSON.stringify(d);
+  if(j===lastWritten.s){sDirty=false;return}
+  sBusy=true; lastWritten.s=j;
+  try{await settingsRef.set(d)}catch(e){}
+  sBusy=false; if(sAgain){sAgain=false;flushSettings()} else sDirty=false;
+}
+let rBusy=false,rAgain=false;
+async function saveRounds(){
+  lsSet("pt.rounds",{list:S.rounds});
+  if(!roundsRef) return;
+  if(rBusy){rAgain=true;return}
+  rBusy=true;
+  try{await roundsRef.set({list:S.rounds.slice(0,300)})}catch(e){}
+  rBusy=false; if(rAgain){rAgain=false;saveRounds()}
+}
+
+/* ---------- Rechenmodell ---------- */
+// Wie weit ein Putt "spielt": schnelleres Grün -> kürzer, bergauf -> länger.
+// Pro Prozent Gefälle ändert sich die Länge um k = 0,01375 × Stimp (≈ 11 % bei 8 Stimp).
+function playsLike(d,stimp,slope,ref){
+  const speed=ref/stimp;
+  const slopeF=Math.max(0.15,1+0.01375*stimp*slope);
+  return d*speed*slopeF;
+}
+// Ausholweg aus der eigenen Tabelle (eben, Referenz-Stimp), linear interpoliert.
+function backstroke(pl,base){
+  const n=base.length;
+  if(pl<=1){const m=base[1]-base[0];return Math.max(3,base[0]-(1-pl)*m)}
+  if(pl>=n){const m=base[n-1]-base[n-2];return base[n-1]+(pl-n)*m}
+  const i=Math.floor(pl)-1, t=pl-Math.floor(pl);
+  return base[i]+(base[i+1]-base[i])*t;
+}
+// Meter-Tabelle folgt immer der Schritt-Tabelle: Distanz in Schritte umrechnen, dort interpolieren.
+function meterBase(){return Array.from({length:15},(_,i)=>Math.round(backstroke((i+1)*100/S.stepCm,S.baseSteps)*10)/10)}
+function curBase(){return S.unit==="steps"?S.baseSteps:meterBase()}
+function setCurBase(v){S.baseSteps=v}
+function uLabel(n,dec){return S.unit==="steps"?fmt(n,dec)+(n===1&&!dec?" Schritt":" Schritte"):fmt(n,dec)+" m"}
+function fmtCm(v){return fmt(v,v%1?1:0)}
+function fmt(n,dec){return n.toLocaleString("de-DE",{minimumFractionDigits:dec,maximumFractionDigits:dec})}
+function fmtStimp(s){return fmt(s,s%1?1:0)}
+function slopeText(s){if(!s)return"eben";return fmt(Math.abs(s),s%1?1:0)+" % "+(s>0?"bergauf":"bergab")}
+
+/* ---------- Distanztabelle ---------- */
+const stimpEl=$("#stimp"), slopeEl=$("#slope");
+function setRangeFill(el){
+  const p=(el.value-el.min)/(el.max-el.min)*100;
+  if(el.classList.contains("slope")){const a=Math.min(50,p),b=Math.max(50,p);el.style.setProperty("--a",a+"%");el.style.setProperty("--b",b+"%")}
+  else el.style.setProperty("--p",p+"%");
+}
+function syncControls(){
+  stimpEl.value=S.stimp; slopeEl.value=S.slope; bpmEl.value=S.bpm; silEl.value=S.silent;
+  [stimpEl,slopeEl,bpmEl,silEl].forEach(setRangeFill);
+  $("#stimpVal").textContent=fmtStimp(S.stimp)+" Stimp";
+  $("#slopeVal").textContent=slopeText(S.slope);
+  $("#bpmVal").textContent=S.bpm+" bpm";
+  $("#silVal").textContent=S.silent;
+  renderSilentDots();
+  $("#uM").setAttribute("aria-pressed",S.unit==="m"); $("#uS").setAttribute("aria-pressed",S.unit==="steps");
+}
+function render(){
+  const t=$("#chartTable");
+  const flatRef=(S.stimp===S.refStimp&&S.slope===0);
+  $("#chartSub").textContent=`bei ${S.bpm} bpm · ${fmtStimp(S.stimp)} Stimp · ${slopeText(S.slope)}`;
+  let html=`<div class="thead"><span>Distanz</span><span>${editing?"":"Ausholweg"}</span><span>${editing?"cm":""}</span></div>`;
+  const base=curBase(), maxBs=90;
+  base.forEach((_,i)=>{ const d=i+1;
+    if(editing){
+      const v=editing[i]; const bad=i>0&&v<=editing[i-1];
+      html+=`<div class="trow${bad?" bad":""}"><span class="dist num">${uLabel(d,0)}</span><span class="plays">${bad?"kleiner als die Zeile darüber":""}</span>
+        <input class="edit-in num" type="number" inputmode="decimal" step="0.5" min="1" max="200" id="e${i}" data-i="${i}" value="${v}" aria-label="Ausholweg für ${uLabel(d,0)} in Zentimetern"></div>`;
+    }else{
+      const pl=playsLike(d,S.stimp,S.slope,S.refStimp);
+      const raw=backstroke(pl,base), bs=Math.round(raw*2)/2;
+      const diff=Math.abs(pl-d)>=0.05;
+      const cls=pl>d?"up":"down";
+      html+=`<div class="trow"><span class="dist num">${uLabel(d,0)}${diff?`<span class="plays ${cls}">spielt wie ${uLabel(pl,1)}</span>`:""}</span>
+        <span class="ruler" aria-hidden="true"><i style="width:${Math.min(100,bs/maxBs*100)}%"></i></span>
+        <span class="bs num">${fmtCm(bs)}<small>cm</small></span></div>`;
+    }
+  });
+  t.innerHTML=html;
+  const note=$("#editNote");
+  note.hidden=!editing;
+  if(editing) note.textContent=`Trage deinen Ausholweg für ebenes Grün bei ${fmtStimp(S.refStimp)} Stimp und ${S.bpm} bpm ein. Gefälle und andere Grüngeschwindigkeiten rechnet die App daraus um.`;
+  $("#editActions").hidden=!editing;
+  $("#btnEdit").hidden=!!editing;
+  $("#btnEdit").textContent=S.unit==="steps"?"Bearbeiten":"In Schritten bearbeiten";
+  if(!editing&&S.unit!=="steps") $("#editNote").hidden=false, $("#editNote").textContent=`Berechnet aus deiner Schritt-Tabelle (1 Schritt = ${S.stepCm} cm).`;
+}
+function setUnit(u){if(editing)return;S.unit=u;syncControls();render();renderRound();saveSettings(true);window.dispatchEvent(new Event("pt:units"))}
+$("#uM").addEventListener("click",()=>setUnit("m"));
+$("#uS").addEventListener("click",()=>setUnit("steps"));
+stimpEl.addEventListener("input",()=>{S.stimp=+stimpEl.value;syncControls();render();saveSettings()});
+slopeEl.addEventListener("input",()=>{S.slope=+slopeEl.value;syncControls();render();saveSettings()});
+$("#btnEdit").addEventListener("click",()=>{if(S.unit!=="steps")setUnit("steps");editing=S.baseSteps.slice();render();const f=$("#e0");f&&f.focus()});
+$("#chartTable").addEventListener("input",e=>{
+  const i=e.target.dataset&&e.target.dataset.i; if(i==null) return;
+  const v=parseFloat(String(e.target.value).replace(",",".")); editing[+i]=isNaN(v)?0:v;
+  const rows=[...document.querySelectorAll("#chartTable .trow")];
+  rows.forEach((r,j)=>{const bad=j>0&&editing[j]<=editing[j-1];r.classList.toggle("bad",bad);r.querySelector(".plays").textContent=bad?"kleiner als die Zeile darüber":""});
+});
+$("#btnEditDone").addEventListener("click",()=>{
+  if(editing.some(v=>!(v>0&&v<=200))){toast("Bitte überall einen Wert zwischen 1 und 200 cm eintragen.");return}
+  setCurBase(editing.slice()); editing=null; render(); saveSettings(true); toast("Tabelle gespeichert");
+});
+$("#btnEditCancel").addEventListener("click",()=>{editing=null;render()});
+
+/* ---------- Gefälle messen ---------- */
+$("#btnMeasure").addEventListener("click",openMeasure);
+function openMeasure(){
+  const host=openSheet(`<h3>Gefälle messen</h3>
+    <p>Lege das Handy flach auf die Puttlinie, die Oberkante zeigt zum Loch. Halte still, die Messung mittelt über zwei Sekunden.</p>
+    <div class="level"><div class="ln" id="lvLine"></div><div class="rd num" id="lvRead">–</div></div>
+    <div class="status" id="lvStatus">Sensor wird gestartet …</div>
+    <div class="save-line"><button class="btn" id="lvClose">Schließen</button><button class="btn primary" id="lvTake" disabled>Übernehmen</button></div>`);
+  let samples=[], got=false, value=null;
+  const status=host.querySelector("#lvStatus");
+  function onOri(e){
+    if(e.beta==null) return; got=true;
+    const pct=Math.tan(e.beta*Math.PI/180)*100;
+    samples.push(pct); if(samples.length>40) samples.shift();
+    const avg=samples.reduce((a,b)=>a+b,0)/samples.length;
+    value=Math.round(avg*2)/2;
+    host.querySelector("#lvRead").textContent=slopeText(Math.max(-7,Math.min(7,value)));
+    host.querySelector("#lvLine").style.transform=`rotate(${-Math.max(-15,Math.min(15,e.beta))}deg)`;
+    status.textContent=Math.abs(value)>7?"Mehr als 7 % – zu steil für die Tabelle.":"Ruhig halten …";
+    host.querySelector("#lvTake").disabled=false;
+  }
+  function stop(){window.removeEventListener("deviceorientation",onOri)}
+  async function start(){
+    try{
+      if(typeof DeviceOrientationEvent!=="undefined"&&typeof DeviceOrientationEvent.requestPermission==="function"){
+        const r=await DeviceOrientationEvent.requestPermission(); if(r!=="granted") throw 0;
+      }
+      window.addEventListener("deviceorientation",onOri);
+      setTimeout(()=>{if(!got){status.textContent="Der Neigungssensor ist in dieser Ansicht nicht freigegeben. Stell das Gefälle bitte mit dem Regler ein.";status.classList.add("err")}},1500);
+    }catch(e){status.textContent="Kein Zugriff auf den Neigungssensor. Stell das Gefälle bitte mit dem Regler ein.";status.classList.add("err")}
+  }
+  start();
+  host.querySelector("#lvClose").addEventListener("click",()=>{stop();closeSheet()});
+  host.querySelector("#lvTake").addEventListener("click",()=>{
+    if(value!=null){S.slope=Math.max(-7,Math.min(7,value));syncControls();render();saveSettings()}
+    stop();closeSheet();
+  });
+  sheetCleanup=stop;
+}
+
+/* ---------- Einstellungen & Info ---------- */
+$("#btnSettings").addEventListener("click",()=>{
+  const host=openSheet(`<h3>Einstellungen</h3>
+    <div class="ctl"><div class="ctl-head"><span class="ctl-label">Deine Tabelle gilt für</span><span class="ctl-val num" id="refVal"></span></div>
+    <input type="range" id="refStimp" min="6" max="14" step="0.5" aria-label="Referenz-Grüngeschwindigkeit">
+    <div class="ctl-ends"><span>6 Stimp</span><span>14 Stimp</span></div></div>
+    <p>Stell hier die Grüngeschwindigkeit ein, auf der du deine Ausholwege gemessen hast. Daraus rechnet die App alle anderen Geschwindigkeiten um.</p>
+    <div class="ctl"><div class="ctl-head"><span class="ctl-label">Deine Schrittlänge</span><span class="ctl-val num" id="stepVal"></span></div>
+    <input type="range" id="stepCm" min="60" max="120" step="1" aria-label="Schrittlänge in Zentimetern">
+    <div class="ctl-ends"><span>60 cm</span><span>120 cm</span></div></div>
+    <p id="stepHint"></p>
+    <div class="ctl"><span class="ctl-label">Tabelle zurücksetzen</span>
+    <p>Ersetzt deine Schritt-Tabelle durch die Startwerte (10 cm bei 1 Schritt, +5 cm bis 10 Schritte, danach +2,5 cm). Die Meter-Tabelle folgt automatisch.</p>
+    <div class="save-line"><button class="btn danger" id="resetBtn">Auf Startwerte zurücksetzen</button></div></div>
+    <div class="ctl"><span class="ctl-label">Datensicherung</span>
+    <p>Deine Tabellen und Runden liegen nur auf diesem iPhone. Sichere sie ab und zu als Datei, z. B. in iCloud Drive.</p>
+    <div class="save-line"><button class="btn" id="bkOut">Sicherung speichern</button><button class="btn" id="bkIn">Sicherung laden</button></div>
+    <input type="file" id="bkFile" accept="application/json,.json" hidden></div>
+    <button class="btn" id="setClose">Schließen</button>`);
+  const r=host.querySelector("#refStimp"); r.value=S.refStimp; setRangeFill(r);
+  const rv=host.querySelector("#refVal"); rv.textContent=fmtStimp(S.refStimp)+" Stimp";
+  r.addEventListener("input",()=>{S.refStimp=+r.value;setRangeFill(r);rv.textContent=fmtStimp(S.refStimp)+" Stimp";render();saveSettings()});
+  const sc=host.querySelector("#stepCm"), sv=host.querySelector("#stepVal"), sh=host.querySelector("#stepHint");
+  const upd=()=>{sc.value=S.stepCm;setRangeFill(sc);sv.textContent=S.stepCm+" cm";sh.textContent=`1 Schritt = ${S.stepCm} cm, also 10 m ≈ ${fmt(1000/S.stepCm,1)} Schritte. Gilt für die Umrechnung in beiden Testrunden.`};
+  upd(); sc.addEventListener("input",()=>{S.stepCm=+sc.value;upd();render();renderRound();saveSettings();window.dispatchEvent(new Event("pt:units"))});
+  const rb=host.querySelector("#resetBtn"); let armed=false;
+  rb.addEventListener("click",()=>{
+    if(!armed){armed=true;rb.textContent="Wirklich zurücksetzen? Nochmal tippen";return}
+    setCurBase(DEFAULT_STEPS.slice());editing=null;render();saveSettings(true);closeSheet();toast("Tabelle zurückgesetzt");
+  });
+  host.querySelector("#setClose").addEventListener("click",closeSheet);
+  host.querySelector("#bkOut").addEventListener("click",async()=>{
+    const data={app:"putting-tempo",v:1,at:new Date().toISOString(),keys:{}};
+    try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith("pt."))data.keys[k]=localStorage.getItem(k)}}catch(e){}
+    const d=new Date().toISOString().slice(0,10);
+    if(await saveFile(`Golf-Sicherung ${d}.json`,new Blob([JSON.stringify(data)],{type:"application/json"}),"application/json")) toast("Sicherung bereit");
+  });
+  const bf=host.querySelector("#bkFile");
+  host.querySelector("#bkIn").addEventListener("click",()=>bf.click());
+  bf.addEventListener("change",async()=>{
+    try{const d=JSON.parse(await bf.files[0].text());if(d.app!=="putting-tempo"||!d.keys)throw 0;
+      Object.keys(d.keys).forEach(k=>{if(k.startsWith("pt."))localStorage.setItem(k,d.keys[k])});
+      toast("Sicherung geladen");setTimeout(()=>location.reload(),600);
+    }catch(e){toast("Die Datei ist keine gültige Sicherung.")}
+  });
+});
+$("#btnInfo").addEventListener("click",()=>{
+  const host=openSheet(`<h3>So funktioniert's</h3>
+    <p><b>Tabelle:</b> Für jede Distanz steht, wie weit du den Putter bei deinem Metronom-Tempo zurückschwingst. Unter „Bearbeiten“ trägst du deine eigenen Werte ein, gemessen auf ebenem Grün. Du pflegst die Schritt-Tabelle; die Meter-Tabelle rechnet die App daraus über deine Schrittlänge um. Wie lang dein Schritt ist, stellst du unter dem Zahnrad ein; damit rechnet die App Meter in Schritte um.</p>
+    <p><b>Grün & Gefälle:</b> Ein schnelleres Grün macht den Putt kürzer, bergauf macht ihn länger. Die App zeigt, wie weit der Putt „spielt“, und liest den Ausholweg dafür aus deiner Tabelle ab. Pro Prozent Gefälle sind das bei 8 Stimp rund 11 % Länge, bei schnelleren Grüns mehr.</p>
+    <p><b>Metronom:</b> Drei hörbare Schläge – Ansprechen, Umkehrpunkt, Treffmoment –, danach die eingestellten stillen Schläge bis zum nächsten Putt.</p>
+    <p><b>Test:</b> Zufällige Distanzen wie auf einer echten Runde. Ab 3 m trägst du ein, wie weit der erste Putt kurz oder lang lag. „Tempo“ zählt erste Putts, die drin waren oder bis 45 cm hinter dem Loch liegen blieben. „vs. Tour“ vergleicht deine Putts mit dem Durchschnitt von Tourspielern auf denselben Distanzen.</p>
+    <button class="btn" id="infClose">Schließen</button>`);
+  host.querySelector("#infClose").addEventListener("click",closeSheet);
+});
+
+let sheetCleanup=null;
+function openSheet(inner){
+  const host=$("#sheetHost");
+  host.innerHTML=`<div class="sheet-bg" id="sheetBg"><div class="sheet" role="dialog" aria-modal="true">${inner}</div></div>`;
+  host.querySelector("#sheetBg").addEventListener("click",e=>{if(e.target.id==="sheetBg")closeSheet()});
+  return host;
+}
+function closeSheet(){if(sheetCleanup){sheetCleanup();sheetCleanup=null}$("#sheetHost").innerHTML=""}
+let toastT=null;
+function toast(msg){const h=$("#toastHost");h.innerHTML=`<div class="toast" role="status"></div>`;h.firstChild.textContent=msg;clearTimeout(toastT);toastT=setTimeout(()=>h.innerHTML="",2200)}
+
+/* ---------- Metronom ---------- */
+const bpmEl=$("#bpm"), silEl=$("#silent");
+bpmEl.addEventListener("input",()=>{S.bpm=+bpmEl.value;syncControls();render();saveSettings()});
+$("#bpmDown").addEventListener("click",()=>{S.bpm=Math.max(60,S.bpm-1);syncControls();render();saveSettings()});
+$("#bpmUp").addEventListener("click",()=>{S.bpm=Math.min(120,S.bpm+1);syncControls();render();saveSettings()});
+silEl.addEventListener("input",()=>{S.silent=+silEl.value;syncControls();saveSettings()});
+function renderSilentDots(){const r=$("#silentRow");r.innerHTML="";for(let i=0;i<S.silent;i++){const d=document.createElement("div");d.className="sdot";r.appendChild(d)}}
+
+let actx=null, running=false, nextTime=0, step=0, schedTimer=null, queue=[], raf=null, wake=null;
+function click(t,freq){
+  const o=actx.createOscillator(), g=actx.createGain();
+  o.type="sine"; o.frequency.value=freq;
+  // kurzer Sinus-Piep: ca. 2,5 ms Anstieg, nach ca. 55 ms verklungen
+  g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.9,t+0.0025); g.gain.exponentialRampToValueAtTime(0.045,t+0.055); g.gain.exponentialRampToValueAtTime(0.0001,t+0.065);
+  o.connect(g).connect(actx.destination); o.start(t); o.stop(t+0.07);
+}
+function scheduler(){
+  const spb=60/S.bpm, cycle=3+S.silent;
+  while(nextTime<actx.currentTime+0.12){
+    const pos=step%cycle;
+    if(pos<3) click(nextTime,[800,1200,800][pos]); // 1 und 3 = 800 Hz, 2 = 1200 Hz
+    queue.push({t:nextTime,pos});
+    nextTime+=spb; step++;
+  }
+}
+function draw(){
+  const now=actx.currentTime; let cur=null;
+  while(queue.length&&queue[0].t<=now){cur=queue.shift()}
+  if(cur){
+    ["#b1","#b2","#b3"].forEach((s,i)=>$(s).classList.toggle("on",cur.pos===i));
+    const dots=document.querySelectorAll(".sdot"); dots.forEach((d,i)=>d.classList.toggle("on",cur.pos===3+i));
+  }
+  raf=requestAnimationFrame(draw);
+}
+async function startMetro(){
+  if(!actx){const C=window.AudioContext||window.webkitAudioContext;actx=new C()}
+  await actx.resume();
+  running=true; step=0; queue=[]; nextTime=actx.currentTime+0.1;
+  schedTimer=setInterval(scheduler,25); scheduler(); draw();
+  $("#btnStart").textContent="STOPP"; $("#btnStart").classList.add("running");
+  try{if(navigator.wakeLock) wake=await navigator.wakeLock.request("screen")}catch(e){}
+}
+function stopMetro(){
+  running=false; clearInterval(schedTimer); cancelAnimationFrame(raf); queue=[];
+  document.querySelectorAll(".beat,.sdot").forEach(e=>e.classList.remove("on"));
+  $("#btnStart").textContent="START"; $("#btnStart").classList.remove("running");
+  try{wake&&wake.release()}catch(e){} wake=null;
+}
+$("#btnStart").addEventListener("click",()=>running?stopMetro():startMetro());
+
+/* ---------- Performance-Test ---------- */
+// Durchschnittliche Putts von Tourspielern nach Distanz (Fuß -> Putts), linear interpoliert.
+const TOUR=[[2,1.01],[3,1.04],[4,1.13],[5,1.23],[6,1.34],[7,1.42],[8,1.50],[9,1.56],[10,1.61],[15,1.78],[20,1.87],[30,1.98],[40,2.06],[50,2.14],[60,2.21]];
+function tourPutts(m){
+  const ft=m/0.3048;
+  if(ft<=TOUR[0][0]) return TOUR[0][1];
+  for(let i=1;i<TOUR.length;i++){if(ft<=TOUR[i][0]){const[a,pa]=TOUR[i-1],[b,pb]=TOUR[i];return pa+(pb-pa)*(ft-a)/(b-a)}}
+  return TOUR[TOUR.length-1][1];
+}
+function rnd(a,b){return a+Math.random()*(b-a)}
+function makeRound(n){
+  const holes=[];
+  for(let i=0;i<n;i++){
+    const r=Math.random(); let d;
+    if(r<0.4) d=rnd(0.9,2.5); else if(r<0.65) d=rnd(2.5,6); else d=rnd(6,16);
+    holes.push({d:Math.round(d*10)/10,putts:null,sign:1,miss:null});
+  }
+  return {n,holes,started:Date.now()};
+}
+const LAG=3;
+function roundStats(r){
+  let putts=0,done=0,sg=0,lag=0,good=0;
+  r.holes.forEach(h=>{
+    if(h.putts){putts+=h.putts;done++;sg+=tourPutts(h.d)-h.putts}
+    if(h.d>=LAG){lag++; if(h.putts===1||(h.miss!=null&&h.sign>0&&h.miss<=45)) good++}
+  });
+  return {putts,done,sg,lag,good};
+}
+function persistRound(){lsSet("pt.round",round)}
+function renderRound(){
+  const a=$("#roundArea");
+  if(!round){
+    a.innerHTML=`<div class="start-round"><p class="hint">Neue Testrunde mit zufälligen Distanzen starten</p>
+      <div class="seg"><button id="r9">9 Löcher</button><button id="r18">18 Löcher</button></div></div>`;
+    a.querySelector("#r9").onclick=()=>{round=makeRound(9);persistRound();renderRound()};
+    a.querySelector("#r18").onclick=()=>{round=makeRound(18);persistRound();renderRound()};
+    return;
+  }
+  let html=`<div class="holes">`;
+  round.holes.forEach((h,i)=>{
+    const tp=fmt(tourPutts(h.d),2);
+    html+=`<div class="hole" data-i="${i}"><div class="hole-main"><span class="hno">${i+1}</span>
+      <span class="hdist num">${S.unit==="steps"?fmt(h.d/stepM(),1)+" Schritte":fmt(h.d,1)+" m"}<small>${S.unit==="steps"?fmt(h.d,1)+" m":fmt(h.d/stepM(),1)+" Schritte"} · Tour: ${tp} Putts</small></span>
+      <div class="putts" role="group" aria-label="Putts an Loch ${i+1}">${[1,2,3].map(p=>`<button data-p="${p}" aria-pressed="${h.putts===p||(p===3&&h.putts>3)}">${p===3?"3+":p}</button>`).join("")}</div></div>`;
+    if(h.d>=LAG){
+      if(h.putts===1) html+=`<div class="miss"><span class="ok">Erster Putt eingelocht</span></div>`;
+      else html+=`<div class="miss"><span>Erster Putt</span><div class="sign"><button data-s="-1" aria-pressed="${h.sign<0}">kurz</button><button data-s="1" aria-pressed="${h.sign>0}">lang</button></div>
+        <input type="number" inputmode="numeric" min="0" max="999" id="m${i}" data-m="${i}" value="${h.miss??""}" placeholder="–" aria-label="Abstand nach erstem Putt an Loch ${i+1} in cm"><span>cm</span></div>`;
+    }
+    html+=`</div>`;
+  });
+  html+=`</div><div class="stats" id="rStats"></div>
+    <div class="save-line"><button class="btn primary" id="rSave">Runde speichern</button><button class="btn danger" id="rDrop">Verwerfen</button></div>`;
+  a.innerHTML=html;
+  renderRoundStats();
+  a.querySelectorAll(".hole").forEach(el=>{
+    const i=+el.dataset.i, h=round.holes[i];
+    el.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>{h.putts=+b.dataset.p;persistRound();renderRound()});
+    el.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{h.sign=+b.dataset.s;persistRound();renderRound()});
+    const m=el.querySelector("[data-m]"); if(m) m.oninput=()=>{const v=parseInt(m.value,10);h.miss=isNaN(v)?null:v;persistRound();renderRoundStats()};
+  });
+  a.querySelector("#rSave").onclick=saveRound;
+  let armed=false; const drop=a.querySelector("#rDrop");
+  drop.onclick=()=>{if(!armed){armed=true;drop.textContent="Sicher? Nochmal tippen";return}round=null;persistRound();renderRound()};
+}
+function renderRoundStats(){
+  const st=roundStats(round), el=$("#rStats"); if(!el) return;
+  const sgTxt=st.done?(st.sg>=0?"+":"−")+fmt(Math.abs(st.sg),1):"–";
+  el.innerHTML=`<div class="stat"><b class="num">${st.putts||"–"}</b><span>Putts ${st.done}/${round.n}</span></div>
+    <div class="stat"><b class="num">${st.lag?st.good+"/"+st.lag:"–"}</b><span>Tempo</span></div>
+    <div class="stat"><b class="num ${st.done?(st.sg>=0?"pos":"neg"):""}">${sgTxt}</b><span>vs. Tour</span></div>`;
+  const s=$("#rSave"); if(s) s.disabled=st.done<round.n;
+}
+function saveRound(){
+  const st=roundStats(round);
+  S.rounds.unshift({at:Date.now(),n:round.n,putts:st.putts,sg:Math.round(st.sg*100)/100,lag:st.lag,good:st.good,
+    stimp:S.stimp,holes:round.holes.map(h=>({d:h.d,p:h.putts,m:h.miss==null?null:h.miss*h.sign}))});
+  S.rounds=S.rounds.slice(0,300);
+  saveRounds(); round=null; persistRound(); renderRound(); renderResults(); toast("Runde gespeichert");
+  showSub("results");
+}
+function renderResults(){
+  const a=$("#resultsArea");
+  if(!S.rounds.length){a.innerHTML=`<div class="empty">Noch keine gespeicherte Runde. Spiel eine Testrunde und tippe auf „Runde speichern“.</div>`;return}
+  const n=S.rounds.length;
+  const avgSg=S.rounds.reduce((s,r)=>s+r.sg/r.n*18,0)/n;
+  const avgP=S.rounds.reduce((s,r)=>s+r.putts/r.n*18,0)/n;
+  const lag=S.rounds.reduce((s,r)=>s+r.lag,0), good=S.rounds.reduce((s,r)=>s+r.good,0);
+  let html=`<div class="stats"><div class="stat"><b class="num">${fmt(avgP,1)}</b><span>Putts / 18</span></div>
+    <div class="stat"><b class="num">${lag?Math.round(good/lag*100)+" %":"–"}</b><span>Tempo</span></div>
+    <div class="stat"><b class="num ${avgSg>=0?"pos":"neg"}">${(avgSg>=0?"+":"−")+fmt(Math.abs(avgSg),1)}</b><span>vs. Tour / 18</span></div></div>
+    <div class="res-list">`;
+  S.rounds.forEach((r,i)=>{
+    const d=new Date(r.at);
+    html+=`<div class="res"><span class="when">${d.toLocaleDateString("de-DE",{weekday:"short",day:"numeric",month:"short"})} · ${r.n} Löcher</span>
+      <span class="sg num ${r.sg>=0?"pos":"neg"}">${(r.sg>=0?"+":"−")+fmt(Math.abs(r.sg),1)}</span>
+      <span class="meta num">${r.putts} Putts · Tempo ${r.good}/${r.lag}${r.stimp?" · "+fmtStimp(r.stimp)+" Stimp":""}</span>
+      <button class="btn ghost" data-del="${i}" style="padding:4px 8px;font-size:.8rem">Löschen</button></div>`;
+  });
+  a.innerHTML=html+"</div>";
+  a.querySelectorAll("[data-del]").forEach(b=>{let armed=false;b.onclick=()=>{
+    if(!armed){armed=true;b.textContent="Sicher?";return}
+    S.rounds.splice(+b.dataset.del,1);saveRounds();renderResults()}});
+}
+function showSub(which){
+  $("#tabRound").setAttribute("aria-pressed",which==="round");
+  $("#tabResults").setAttribute("aria-pressed",which==="results");
+  $("#roundArea").hidden=which!=="round"; $("#resultsArea").hidden=which!=="results";
+}
+$("#tabRound").onclick=()=>showSub("round");
+$("#tabResults").onclick=()=>showSub("results");
+
+/* ---------- Tabs ---------- */
+const TITLES={chart:"Distanztabelle",metro:"Putt-Metronom",test:"Putt-Testrunde",pchart:"Wedge-Tabelle",ptest:"Wedge-Testrunde"};
+const MODES={putt:["chart","metro","test"],pitch:["pchart","ptest"]};
+function showView(v){
+  document.querySelectorAll("nav.tabs button").forEach(x=>x.setAttribute("aria-selected",x.dataset.v===v));
+  Object.keys(TITLES).forEach(k=>$("#v-"+k).hidden=k!==v);
+  $("#title").textContent=TITLES[v]; $("#main").scrollTop=0;
+  if(v!=="metro"&&running) stopMetro();
+  try{localStorage.setItem("pt.tab",v)}catch(e){}
+}
+function setMode(m,view){
+  $("#mPutt").setAttribute("aria-pressed",m==="putt"); $("#mPitch").setAttribute("aria-pressed",m==="pitch");
+  document.querySelectorAll("nav.tabs button").forEach(x=>x.hidden=!MODES[m].includes(x.dataset.v));
+  showView(view&&MODES[m].includes(view)?view:MODES[m][0]);
+}
+document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.v)));
+$("#mPutt").addEventListener("click",()=>setMode("putt"));
+$("#mPitch").addEventListener("click",()=>setMode("pitch"));
+
+syncControls(); render(); renderRound(); renderResults();
+{let t=null;try{t=localStorage.getItem("pt.tab")}catch(e){} setMode(t==="pchart"||t==="ptest"?"pitch":"putt",t)}
+initStore();
+// Für Tests im Terminal
+window.__pt={playsLike,backstroke,tourPutts,DEFAULT_BASE};
+window.PT={toast,openSheet,closeSheet,lsGet,lsSet,fmt,tourPutts,units:()=>({steps:S.unit==="steps",stepCm:S.stepCm}),setUnit};
+
+/* ---------- Dateien speichern (Teilen-Menü auf dem iPhone, sonst Download) ---------- */
+async function saveFile(name,blob,type){
+  try{
+    const file=new File([blob],name,{type});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:name});return true}
+  }catch(e){if(e&&e.name==="AbortError")return false}
+  const url=URL.createObjectURL(blob), a=document.createElement("a");
+  a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);return true;
+}
+/* ---------- PDF-Export (A4) ---------- */
+function loadLib(src){return new Promise((res,rej)=>{const s=document.createElement("script");s.src=src;s.onload=res;s.onerror=rej;document.head.appendChild(s)})}
+const pdfNum=v=>fmt(v,v%1?1:0);
+async function exportPdf(btn){
+  const old=btn.textContent; btn.disabled=true; btn.textContent="PDF wird erstellt …";
+  try{
+    if(!window.jspdf) await loadLib("lib/jspdf.umd.min.js");
+    if(!window.jspdf.jsPDF.API.autoTable) await loadLib("lib/jspdf.plugin.autotable.min.js");
+    const {jsPDF}=window.jspdf, doc=new jsPDF({unit:"mm",format:"a4"});
+    const green=[47,138,76], today=new Date().toLocaleDateString("de-DE");
+    const head=(t,sub)=>{doc.setFont("helvetica","bold");doc.setFontSize(18);doc.text(t,14,18);doc.setFont("helvetica","normal");doc.setFontSize(10);doc.setTextColor(90);doc.text(sub,14,25);doc.setTextColor(0)};
+    const tbl={theme:"grid",styles:{fontSize:10,cellPadding:1.8,halign:"center"},headStyles:{fillColor:green,textColor:255,fontStyle:"bold"},alternateRowStyles:{fillColor:[240,245,240]}};
+    // Putten
+    head("Putting-Tabelle",`${S.bpm} bpm · ${fmtStimp(S.stimp)} Stimp · ${slopeText(S.slope)} · 1 Schritt = ${S.stepCm} cm · Stand ${today}`);
+    const flat=S.stimp===S.refStimp&&S.slope===0;
+    const stepsRows=S.baseSteps.map((_,i)=>{const n=i+1,pl=playsLike(n,S.stimp,S.slope,S.refStimp),bs=Math.round(backstroke(pl,S.baseSteps)*2)/2;
+      return flat?[n,pdfNum(n*S.stepCm/100),pdfNum(bs)+" cm"]:[n,pdfNum(n*S.stepCm/100),fmt(pl,1),pdfNum(bs)+" cm"]});
+    const mb=meterBase();
+    const mRows=mb.map((_,i)=>{const d=i+1,pl=playsLike(d,S.stimp,S.slope,S.refStimp),bs=Math.round(backstroke(pl,mb)*2)/2;
+      return flat?[d+" m",fmt(d*100/S.stepCm,1),pdfNum(bs)+" cm"]:[d+" m",fmt(d*100/S.stepCm,1),fmt(pl,1)+" m",pdfNum(bs)+" cm"]});
+    doc.autoTable({...tbl,startY:32,margin:{left:14,right:108},head:[flat?["Schritte","Meter","Ausholweg"]:["Schritte","Meter","spielt wie","Ausholweg"]],body:stepsRows});
+    doc.autoTable({...tbl,startY:32,margin:{left:108,right:14},head:[flat?["Meter","Schritte","Ausholweg"]:["Meter","Schritte","spielt wie","Ausholweg"]],body:mRows});
+    // Wedges
+    const w=window.PT.wedgeExport&&window.PT.wedgeExport();
+    if(w){
+      w.positions.forEach((p,idx)=>{
+        if(idx%2===0){doc.addPage();head("Wedge-Tabelle",`Carry in ${w.steps?"Schritten (1 Schritt = "+S.stepCm+" cm)":"Metern"} · Griff = Unterkante linke Hand ab unterem Griffende, -3 = auf dem Schaft · fett = gemessen, grau = berechnet · Stand ${today}`)}
+        const y=idx%2===0?33:doc.lastAutoTable.finalY+10;
+        doc.setFont("helvetica","bold");doc.setFontSize(12);doc.text("Ausholen: "+p.label,14,y);
+        doc.autoTable({...tbl,startY:y+3,styles:{...tbl.styles,fontSize:9,cellPadding:0.9},head:[["Griff",...w.wedges.map(x=>x+"°")]],
+          body:p.rows.map(r=>[r.lab,...r.v.map(v=>v==null?"":pdfNum(v))]),
+          didParseCell:d=>{if(d.section==="body"&&d.column.index>0){const m=p.rows[d.row.index].m[d.column.index-1];d.cell.styles.fontStyle=m?"bold":"normal";if(!m)d.cell.styles.textColor=[110,110,110]}}});
+      });
+    }
+    const blob=doc.output("blob");
+    if(await saveFile(`Golf-Tabellen ${today}.pdf`,blob,"application/pdf")) toast("PDF bereit");
+  }catch(e){
+    console.warn("PDF-Export",e);
+    if(e&&e.code==="declined"){} else if(e&&e.code==="rate_limited") toast("Es ist schon ein Speicherdialog offen.");
+    else toast("PDF konnte nicht erstellt werden. Bitte nochmal versuchen.");
+  }finally{btn.disabled=false;btn.textContent=old}
+}
+document.querySelectorAll("[data-pdf]").forEach(b=>b.addEventListener("click",()=>exportPdf(b)));
+})();
+</script>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const {toast,lsGet,lsSet,fmt,tourPutts}=window.PT;
+const WEDGES=[60,56,52,48,44];
+const CLOCKS=["7:00","7:30","8:00","8:30","9:00","10:00","11:00"];
+const CLOCK_H={"7:00":7,"7:30":7.5,"8:00":8,"8:30":8.5,"9:00":9,"10:00":10,"11:00":11};
+const CLOCK_N={"7:00":"Knie","7:30":"Oberschenkel","8:00":"Hüfte","8:30":"Bauch","9:00":"Brust","10:00":"Schulter","11:00":"Voll"};
+const cLabel=c=>(CLOCK_N[c]||"")+" · "+c;
+// Griffposition = Abstand vom unteren Griffende bis zur Unterkante der linken Hand, in 3-cm-Schritten.
+// 18 = Hand ganz oben, 0 = Hand ganz unten am Griff, −3 = Hand greift aufs Eisen.
+// 18 cm = Hand ganz oben, 0 cm = Hand ganz unten am Griff, negativ = auf dem Schaft.
+const GRIP_LEN=27, HAND=9, GTOP=GRIP_LEN-HAND, GMIN=-3, GSTEP=3;
+const GRIPS=Array.from({length:(GTOP-GMIN)/GSTEP+1},(_,i)=>GTOP-i*GSTEP);
+const snapG=g=>Math.max(GMIN,Math.min(GTOP,Math.round(g/GSTEP)*GSTEP));
+const gLabel=g=>g===GTOP?g+" cm (oben)":(g<0?"−"+(-g):g)+" cm";
+// Startwerte: Carry in m bei 9 Uhr, volle Grifflänge. Jede Uhrzeit und jeder cm tiefer greifen skaliert das.
+const BASE9={60:35,56:42,52:50,48:57,44:64};
+const CLOCK_F={"7:00":0.38,"7:30":0.5,"8:00":0.65,"8:30":0.8,"9:00":1,"10:00":1.2,"10:30":1.3,"11:00":1.38};
+function startVal(c,w,g){return Math.round(BASE9[w]*(CLOCK_F[c]||1)*(1-0.025*(GTOP-g))*2)/2}
+const P={custom:{},clock:"9:00",grip:18,wedge:56,rounds:[]};
+let pEditing=null, pRound=null, target=null;
+const key=(c,w,g)=>c+"|"+w+"|"+g;
+// Wert einer Zelle: deine Messung, sonst aus mind. 2 Messungen desselben Wedges (gleiche Ausholposition) entlang des Griffs berechnet, sonst null.
+function calcVal(c,w,g){
+  const pts=GRIPS.filter(x=>isMeas(c,w,x)).map(x=>[x,P.custom[key(c,w,x)]]).sort((a,b)=>a[0]-b[0]);
+  if(pts.length<2) return null;
+  let i=pts.findIndex((p,j)=>j<pts.length-1&&g>=p[0]&&g<=pts[j+1][0]);
+  if(i<0) i=g<pts[0][0]?0:pts.length-2;
+  const [g1,v1]=pts[i],[g2,v2]=pts[i+1];
+  const v=v1+(v2-v1)*(g-g1)/(g2-g1);
+  return Math.max(0.5,Math.round(v*2)/2);
+}
+function val(c,w,g){const k=key(c,w,g);return typeof P.custom[k]==="number"?P.custom[k]:calcVal(c,w,g)}
+const show=v=>v==null?"":fm(toU(v));
+function isMeas(c,w,g){return typeof P.custom[key(c,w,g)]==="number"}
+function fm(v){return fmt(v,v%1?1:0)}
+const U=()=>window.PT.units();
+function toU(m){const u=U();return u.steps?Math.round(m*100/u.stepCm*2)/2:m}
+function fromU(v){const u=U();return u.steps?Math.round(v*u.stepCm/10)/10:v}
+const uName=()=>U().steps?"Schr.":"m";
+
+const c0=lsGet("pt.pitch"); if(c0) applyPitch(c0);
+const r0=lsGet("pt.pitchRounds"); if(r0&&Array.isArray(r0.list)) P.rounds=r0.list;
+pRound=lsGet("pt.pround");
+function applyPitch(d){
+  if(d.gv!==4){ // ältere Zählweisen auf "Unterkante ab unten" umrechnen und aufs 3-cm-Raster legen
+    const conv=g=>d.gv===3?g-HAND:d.gv===2?g:GTOP-g; // gv3: Oberkante ab unten, gv2: Unterkante ab unten, gv1: Oberkante ab oben
+    const cu={}; Object.keys(d.custom||{}).forEach(k=>{const [c,w,g]=k.split("|");const ng=snapG(conv(+g));const nk=c+"|"+w+"|"+ng;if(!(nk in cu)||conv(+g)===ng)cu[nk]=d.custom[k]});
+    d={...d,custom:cu,grip:typeof d.grip==="number"?snapG(conv(d.grip)):undefined};
+  }
+  if(d.custom&&typeof d.custom==="object") P.custom={...d.custom};
+  if(CLOCKS.includes(d.clock)) P.clock=d.clock;
+  if(GRIPS.includes(d.grip)) P.grip=d.grip;
+  if(WEDGES.includes(d.wedge)) P.wedge=d.wedge;
+}
+const pitchDoc=()=>({gv:4,custom:P.custom,clock:P.clock,grip:P.grip,wedge:P.wedge});
+
+/* ---------- Speicher ---------- */
+function makeDoc(path){
+  let ref=null,busy=false,again=null,last="";
+  return {
+    dirty:false,
+    bind(r,onData){ref=r;ref.onSnapshot(s=>{if(this.dirty||busy) return; if(s.exists&&!s.metadata.hasPendingWrites){const j=JSON.stringify(s.data());if(j!==last){last=j;onData(s.data())}} else if(!s.exists&&!s.metadata.fromCache) onData(null)},()=>{})},
+    async save(data){ if(!ref) return; if(busy){again=data;return}
+      const j=JSON.stringify(data); if(j===last){this.dirty=false;return} busy=true; last=j;
+      try{await ref.set(data)}catch(e){} busy=false; if(again){const a=again;again=null;this.save(a)} else this.dirty=false }
+  };
+}
+const dPitch=makeDoc(), dRounds=makeDoc();
+let tSave=null;
+function savePitch(now){lsSet("pt.pitch",pitchDoc());dPitch.dirty=true;clearTimeout(tSave);tSave=setTimeout(()=>dPitch.save(pitchDoc()),now?0:800)}
+function saveRounds(){P.rounds=P.rounds.slice(0,300);lsSet("pt.pitchRounds",{list:P.rounds});dRounds.save({list:P.rounds})}
+(async()=>{
+  try{
+    if(!window.claude||!window.claude.use) return;
+    const [db,u]=await Promise.all([window.claude.use("db"),window.claude.use("user")]);
+    if(!db||!u) return; const id=await u.id(); if(!id) return;
+    dPitch.bind(db.doc("data/users/"+id+"/pitch"),d=>{ if(d){applyPitch(d);lsSet("pt.pitch",pitchDoc());renderAll()} else if(c0) dPitch.save(pitchDoc()) });
+    dRounds.bind(db.doc("data/users/"+id+"/pitchRounds"),d=>{ if(d&&Array.isArray(d.list)){P.rounds=d.list.slice();lsSet("pt.pitchRounds",{list:P.rounds});renderResults()} else if(!d&&P.rounds.length) saveRounds() });
+  }catch(e){}
+})();
+
+/* ---------- Griff ---------- */
+const PX=12, TOP=24;
+const svg=$("#gripSvg");
+function drawGrip(){
+  const y0=TOP, y1=TOP+GRIP_LEN*PX, cx=74, yAt=k=>y0+(GRIP_LEN-k)*PX;
+  let h=`<rect class="shaft" x="${cx-3}" y="${y1}" width="6" height="${410-y1}"/>`;
+  h+=`<path class="body" d="M${cx-16} ${y0} L${cx+16} ${y0} L${cx+11} ${y1} L${cx-11} ${y1} Z"/>`;
+  for(let i=1;i<GRIP_LEN;i+=2){const y=y0+i*PX, w=16-5*i/GRIP_LEN;h+=`<line class="wrap" x1="${cx-w}" y1="${y}" x2="${cx+w}" y2="${y+4}"/>`}
+  h+=`<rect class="cap" x="${cx-18}" y="${y0-8}" width="36" height="9" rx="4"/>`;
+  for(let k=GMIN;k<=GRIP_LEN;k++){const y=yAt(k);h+=`<line class="tick" x1="${k%2?36:30}" y1="${y}" x2="44" y2="${y}"/>`;if(k%3===0)h+=`<text class="tl" x="26" y="${y+3}" text-anchor="end">${k<0?"−"+(-k):k}</text>`}
+  h+=`<text class="tl" x="26" y="10" text-anchor="end">cm</text>`;
+  const gy=yAt(P.grip);
+  h+=`<rect class="hand" x="${cx-24}" y="${gy-HAND*PX}" width="48" height="${HAND*PX}" rx="6"/>`;
+  h+=`<line class="edge" x1="${cx-26}" y1="${gy}" x2="${cx+26}" y2="${gy}"/>`;
+  h+=`<text class="tl" x="${cx}" y="${gy-HAND*PX/2+3}" text-anchor="middle" style="fill:var(--fg)">links</text>`;
+  h+=`<rect class="knob" x="${cx+14}" y="${gy-11}" width="32" height="22" rx="11"/><text class="kt" x="${cx+30}" y="${gy+4}">${P.grip<0?"−"+(-P.grip):P.grip}</text>`;
+  svg.innerHTML=h; svg.setAttribute("aria-valuenow",P.grip); svg.setAttribute("aria-valuetext",gLabel(P.grip)+" ab unten");
+}
+function setGrip(g){g=snapG(g);if(g===P.grip)return;P.grip=g;renderAll();savePitch()}
+let dragging=false;
+function yToGrip(ev){const r=svg.getBoundingClientRect();const y=(ev.clientY-r.top)*(410/r.height);return GRIP_LEN-(y-TOP)/PX}
+svg.addEventListener("pointerdown",e=>{dragging=true;svg.setPointerCapture(e.pointerId);setGrip(yToGrip(e))});
+svg.addEventListener("pointermove",e=>{if(dragging)setGrip(yToGrip(e))});
+svg.addEventListener("pointerup",()=>dragging=false);
+svg.addEventListener("pointercancel",()=>dragging=false);
+svg.addEventListener("keydown",e=>{if(e.key==="ArrowDown"||e.key==="ArrowLeft"){setGrip(P.grip-GSTEP);e.preventDefault()}if(e.key==="ArrowUp"||e.key==="ArrowRight"){setGrip(P.grip+GSTEP);e.preventDefault()}});
+// Ausholposition per Ziehen an der Uhr: Winkel -> nächste wählbare Uhrzeit
+const dialEl=$("#dial"); let dialDrag=false;
+function dialPick(ev){
+  const r=dialEl.getBoundingClientRect(), x=(ev.clientX-r.left)/r.width*120-60, y=(ev.clientY-r.top)/r.height*120-60;
+  let hr=((Math.atan2(x,-y)*180/Math.PI)+360)%360/30;
+  let best=P.clock, bd=99; CLOCKS.forEach(c=>{let d=Math.abs(CLOCK_H[c]-hr); d=Math.min(d,12-d); if(d<bd){bd=d;best=c}});
+  if(best!==P.clock&&!pEditing){P.clock=best;renderAll();savePitch()}
+}
+dialEl.addEventListener("pointerdown",e=>{dialDrag=true;dialEl.setPointerCapture(e.pointerId);dialPick(e)});
+dialEl.addEventListener("pointermove",e=>{if(dialDrag)dialPick(e)});
+dialEl.addEventListener("pointerup",()=>dialDrag=false);
+dialEl.addEventListener("pointercancel",()=>dialDrag=false);
+dialEl.addEventListener("keydown",e=>{const i=CLOCKS.indexOf(P.clock);let n=i;
+  if(e.key==="ArrowUp"||e.key==="ArrowRight")n=Math.min(CLOCKS.length-1,i+1);
+  if(e.key==="ArrowDown"||e.key==="ArrowLeft")n=Math.max(0,i-1);
+  if(n!==i&&!pEditing){P.clock=CLOCKS[n];renderAll();savePitch();e.preventDefault()}});
+
+function drawDial(){
+  // Uhr um ein Strichmännchen (frontal): Arme und Schläger zeigen auf die gewählte Uhrzeit.
+  const C=60, R=56, h=CLOCK_H[P.clock]||9, a=h*30*Math.PI/180, dx=Math.sin(a), dy=-Math.cos(a);
+  let s=`<circle class="face" cx="${C}" cy="${C}" r="${R}"/>`;
+  for(let i=0;i<12;i++){const t=i*30*Math.PI/180,on=Math.abs(i-(h%12))<0.01,r1=on?R-9:R-5;s+=`<line class="tk${on?" on":""}" x1="${C+R*Math.sin(t)}" y1="${C-R*Math.cos(t)}" x2="${C+r1*Math.sin(t)}" y2="${C-r1*Math.cos(t)}"/>`}
+  if(h%1){const t=h*30*Math.PI/180;s+=`<line class="tk on" x1="${C+R*Math.sin(t)}" y1="${C-R*Math.cos(t)}" x2="${C+(R-9)*Math.sin(t)}" y2="${C-(R-9)*Math.cos(t)}"/>`}
+  s+=`<text x="${C}" y="13">12</text><text x="${C+R-14}" y="${C}">3</text><text x="${C}" y="${C+R-11}">6</text><text x="${C-R+14}" y="${C}">9</text>`;
+  // Ansprechposition als gestrichelte Linie
+  s+=`<line class="ghost" x1="${C}" y1="78" x2="${C+2}" y2="${C+R-4}"/>`;
+  const px=C, py=56, hx=px+24*dx, hy=py+24*dy, ex=px+50*dx, ey=py+50*dy;
+  s+=`<circle class="head" cx="${C}" cy="31" r="6.5"/>`;
+  s+=`<path class="fig" d="M${C} 38 L${C} 72 M${C} 72 L${C-10} 100 M${C} 72 L${C+10} 100 M${C-7} 44 L${hx} ${hy} M${C+7} 44 L${hx} ${hy} M${C-7} 44 L${C+7} 44"/>`;
+  s+=`<line class="club" x1="${hx}" y1="${hy}" x2="${ex}" y2="${ey}"/><circle class="clubhead" cx="${ex}" cy="${ey}" r="3.2"/>`;
+  $("#dial").innerHTML=s;
+}
+function renderSide(){
+  $("#clockVal").textContent=cLabel(P.clock);
+  dialEl.setAttribute("aria-valuetext",cLabel(P.clock));
+  $("#wList").innerHTML=WEDGES.map(w=>`<button data-w="${w}" aria-pressed="${w===P.wedge}"><span class="wl">${w}°</span><span class="wd num">${val(P.clock,w,P.grip)==null?"–":show(val(P.clock,w,P.grip))+" "+uName()}</span></button>`).join("");
+  $("#wList").querySelectorAll("button").forEach(b=>b.onclick=()=>{P.wedge=+b.dataset.w;renderAll();savePitch()});
+  drawDial(); drawGrip();
+}
+
+/* ---------- Zielsuche ---------- */
+function bestCombos(dist,n,clock){
+  const all=[];
+  (clock?[clock]:CLOCKS).forEach(c=>WEDGES.forEach(w=>GRIPS.forEach(g=>{const v=val(c,w,g);if(v==null)return;all.push({c,w,g,v,err:Math.abs(v-dist)+(c===P.clock?0:0.6)+(GTOP-g)*0.02})})));
+  all.sort((a,b)=>a.err-b.err);
+  return all.slice(0,n);
+}
+$("#tgt").addEventListener("input",()=>{const v=parseFloat(String($("#tgt").value).replace(",","."));target=v>0?fromU(v):null;renderSugg();renderTable()});
+function renderSugg(){
+  const el=$("#sugg");
+  if(!target){el.innerHTML="";return}
+  const b=bestCombos(target,3);
+  el.innerHTML=b.map((x,i)=>`<button data-i="${i}"><span>${x.w}° · ${cLabel(x.c)} · Hand ${gLabel(x.g)}</span><span class="num">${fm(toU(x.v))} ${uName()}</span></button>`).join("");
+  el.querySelectorAll("button").forEach(btn=>btn.onclick=()=>{const x=b[+btn.dataset.i];P.clock=x.c;P.wedge=x.w;P.grip=x.g;renderAll();savePitch()});
+}
+
+/* ---------- Tabelle ---------- */
+function renderTable(){
+  const c=P.clock, best=target&&!pEditing?bestCombos(target,1,c)[0]:null;
+  let h=`<thead><tr><th>Griff</th>${WEDGES.map(w=>`<th>${w}°</th>`).join("")}</tr></thead><tbody>`;
+  GRIPS.forEach(g=>{
+    h+=`<tr class="${g===P.grip&&!pEditing?"cur":""}"><td>${gLabel(g)}</td>`;
+    WEDGES.forEach(w=>{
+      if(pEditing){const k=key(c,w,g);const v=pEditing[k];
+        h+=`<td><input type="number" inputmode="decimal" step="0.5" min="1" max="150" data-k="${k}" value="${typeof v==="number"?toU(v):""}" placeholder="–" aria-label="${w} Grad, linke Hand ${g} cm"></td>`;
+      }else{
+        const cls=[isMeas(c,w,g)?"meas":"",g===P.grip&&w===P.wedge?"sel":"",best&&best.w===w&&best.g===g?"best":""].join(" ");
+        h+=`<td><button class="${cls}" data-w="${w}" data-g="${g}" aria-label="${w} Grad, linke Hand ${g} cm: ${val(c,w,g)==null?"noch kein Wert":show(val(c,w,g))+" "+uName()}">${show(val(c,w,g))}</button></td>`;
+      }
+    });
+    h+=`</tr>`;
+  });
+  const t=$("#wTable"); t.innerHTML=h+"</tbody>";
+  t.querySelectorAll("button[data-w]").forEach(b=>b.onclick=()=>{P.wedge=+b.dataset.w;P.grip=+b.dataset.g;renderAll();savePitch()});
+  t.querySelectorAll("input[data-k]").forEach(i=>i.oninput=()=>{const v=parseFloat(String(i.value).replace(",","."));if(v>0)pEditing[i.dataset.k]=fromU(v);else delete pEditing[i.dataset.k]});
+  const st=U().steps; $("#pH").textContent=st?"Carry in Schritten":"Carry in Metern"; $("#tgtUnit").textContent=st?"Schritte":"m";
+  $("#puM").setAttribute("aria-pressed",!st); $("#puS").setAttribute("aria-pressed",st);
+  $("#pSub").textContent=`Ausholen bis ${cLabel(c)} · Unterkante linke Hand ab unterem Griffende`;
+  $("#pNote").hidden=!pEditing; $("#pActions").hidden=!pEditing; $("#pEdit").hidden=!!pEditing; $("#pLegend").hidden=!!pEditing;
+  if(pEditing) $("#pNote").textContent=`Trag deine gemessenen Carry-Weiten für ${cLabel(c)} in ${U().steps?"Schritten":"Metern"} ein. Sobald ein Wedge zwei Messungen hat, berechnet die App seine übrigen Griffpositionen.`;
+}
+$("#pEdit").onclick=()=>{pEditing={...P.custom};renderTable()};
+$("#pCancel").onclick=()=>{pEditing=null;renderTable()};
+$("#pDone").onclick=()=>{
+  const c=P.clock; Object.keys(P.custom).forEach(k=>{if(k.startsWith(c+"|"))delete P.custom[k]});
+  Object.keys(pEditing).forEach(k=>{if(k.startsWith(c+"|"))P.custom[k]=pEditing[k]});
+  pEditing=null; renderAll(); savePitch(true); toast("Tabelle gespeichert");
+};
+let clearArmed=false;
+$("#pClear").onclick=()=>{
+  if(!clearArmed){clearArmed=true;$("#pClear").textContent="Sicher? Nochmal tippen";return}
+  clearArmed=false;$("#pClear").textContent="Eigene Werte dieser Uhrzeit löschen";
+  Object.keys(pEditing).forEach(k=>{if(k.startsWith(P.clock+"|"))delete pEditing[k]});renderTable();
+};
+
+/* ---------- Testrunde ---------- */
+// Ungefähre Tour-Schläge bis eingelocht vom Fairway (Meter -> Schläge), Näherung.
+const TOUR=[[5,2.15],[10,2.22],[15,2.3],[20,2.37],[25,2.42],[30,2.47],[40,2.55],[50,2.62],[60,2.68]];
+function tourStrokes(m){if(m<=TOUR[0][0])return TOUR[0][1];for(let i=1;i<TOUR.length;i++){if(m<=TOUR[i][0]){const[a,pa]=TOUR[i-1],[b,pb]=TOUR[i];return pa+(pb-pa)*(m-a)/(b-a)}}return TOUR[TOUR.length-1][1]}
+function newRound(n){
+  const holes=[];
+  for(let i=0;i<n;i++){
+    const d=Math.round((8+Math.random()*42));
+    const b=bestCombos(d,1)[0]||{w:P.wedge,g:P.grip,c:P.clock};
+    holes.push({d,w:b.w,g:b.g,c:b.c,prox:null,putts:null});
+  }
+  return {n,holes};
+}
+function pStats(r){
+  let done=0,sg=0,ud=0,prox=0,np=0;
+  r.holes.forEach(h=>{if(h.putts!=null){done++;sg+=tourStrokes(h.d)-(1+h.putts);if(h.putts<=1)ud++}if(h.prox!=null){prox+=h.prox;np++}});
+  return {done,sg,ud,prox:np?prox/np:null};
+}
+const persist=()=>lsSet("pt.pround",pRound);
+function renderRound(){
+  const a=$("#pRoundArea");
+  if(!pRound){
+    a.innerHTML=`<div class="start-round"><p class="hint">Neue Wedge-Testrunde mit Distanzen von 8 bis 50 m. Für jedes Loch schlägt die App Wedge, Ausholen und Griff aus deiner Tabelle vor.</p>
+      <div class="seg"><button id="pr9">9 Löcher</button><button id="pr18">18 Löcher</button></div></div>`;
+    a.querySelector("#pr9").onclick=()=>{pRound=newRound(9);persist();renderRound()};
+    a.querySelector("#pr18").onclick=()=>{pRound=newRound(18);persist();renderRound()};
+    return;
+  }
+  let h=`<div class="holes">`;
+  pRound.holes.forEach((x,i)=>{
+    h+=`<div class="hole" data-i="${i}">
+      <div class="hole-main"><span class="hno">${i+1}</span><span class="hdist num">${x.d} m${window.PT.units().steps?` · ${fmt(Math.round(x.d*100/window.PT.units().stepCm*2)/2,1)} Schritte`:""}<small>Vorschlag: ${val(x.c,x.w,x.g)==null?"kein Tabellenwert":show(val(x.c,x.w,x.g))+" "+uName()} · Tour ${fmt(tourStrokes(x.d),2)} Schläge</small></span></div>
+      <div class="miss"><div class="chips">${WEDGES.map(w=>`<button data-w="${w}" aria-pressed="${w===x.w}">${w}°</button>`).join("")}</div></div>
+      <div class="miss"><label class="pfield">Ausholen <select data-c aria-label="Ausholposition Loch ${i+1}">${CLOCKS.map(c=>`<option value="${c}" ${c===x.c?"selected":""}>${cLabel(c)}</option>`).join("")}</select></label>
+        <label class="pfield">Griff <select data-g aria-label="Griffposition Loch ${i+1}">${GRIPS.map(g=>`<option value="${g}" ${g===x.g?"selected":""}>${gLabel(g)}</option>`).join("")}</select></label></div>
+      <div class="miss"><label class="pfield">Abstand zur Fahne <input type="number" inputmode="decimal" step="0.1" min="0" data-p value="${x.prox??""}" placeholder="–" aria-label="Abstand zur Fahne Loch ${i+1} in Metern"> m</label></div>
+      <div class="miss"><span>Putts danach</span><div class="putts">${[0,1,2,3].map(p=>`<button data-pt="${p}" aria-pressed="${x.putts===p}">${p===3?"3+":p}</button>`).join("")}</div></div>
+    </div>`;
+  });
+  h+=`</div><div class="stats" id="pStats"></div>
+    <div class="save-line"><button class="btn primary" id="pSave">Runde speichern</button><button class="btn danger" id="pDrop">Verwerfen</button></div>`;
+  a.innerHTML=h;
+  a.querySelectorAll(".hole").forEach(el=>{
+    const x=pRound.holes[+el.dataset.i];
+    el.querySelectorAll("[data-w]").forEach(b=>b.onclick=()=>{x.w=+b.dataset.w;persist();renderRound()});
+    el.querySelector("[data-c]").onchange=e=>{x.c=e.target.value;persist();renderRound()};
+    el.querySelector("[data-g]").onchange=e=>{x.g=+e.target.value;persist();renderRound()};
+    const pi=el.querySelector("[data-p]"); pi.oninput=()=>{const v=parseFloat(String(pi.value).replace(",","."));x.prox=isNaN(v)?null:v;persist();renderPStats()};
+    el.querySelectorAll("[data-pt]").forEach(b=>b.onclick=()=>{x.putts=+b.dataset.pt;if(x.putts===0)x.prox=0;persist();renderRound()});
+  });
+  renderPStats();
+  a.querySelector("#pSave").onclick=saveRound;
+  let armed=false; const d=a.querySelector("#pDrop");
+  d.onclick=()=>{if(!armed){armed=true;d.textContent="Sicher? Nochmal tippen";return}pRound=null;persist();renderRound()};
+}
+function renderPStats(){
+  const s=pStats(pRound), el=$("#pStats"); if(!el) return;
+  el.innerHTML=`<div class="stat"><b class="num">${s.prox==null?"–":fmt(s.prox,1)+" m"}</b><span>Ø zur Fahne</span></div>
+    <div class="stat"><b class="num">${s.done?s.ud+"/"+s.done:"–"}</b><span>Up &amp; Down</span></div>
+    <div class="stat"><b class="num ${s.done?(s.sg>=0?"pos":"neg"):""}">${s.done?(s.sg>=0?"+":"−")+fmt(Math.abs(s.sg),1):"–"}</b><span>vs. Tour</span></div>`;
+  const b=$("#pSave"); if(b) b.disabled=s.done<pRound.n;
+}
+function saveRound(){
+  const s=pStats(pRound);
+  P.rounds.unshift({at:Date.now(),n:pRound.n,sg:Math.round(s.sg*100)/100,ud:s.ud,prox:s.prox==null?null:Math.round(s.prox*10)/10,
+    holes:pRound.holes.map(h=>({d:h.d,w:h.w,g:h.g,c:h.c,p:h.prox,pt:h.putts}))});
+  saveRounds(); pRound=null; persist(); renderRound(); renderResults(); toast("Runde gespeichert"); showSub("results");
+}
+function renderResults(){
+  const a=$("#pResultsArea");
+  if(!P.rounds.length){a.innerHTML=`<div class="empty">Noch keine Wedge-Runde gespeichert. Spiel eine Testrunde und tippe auf „Runde speichern“.</div>`;return}
+  const holes=P.rounds.flatMap(r=>r.holes||[]);
+  const proxH=holes.filter(h=>typeof h.p==="number");
+  const avgProx=proxH.length?proxH.reduce((s,h)=>s+h.p,0)/proxH.length:null;
+  const ud=holes.filter(h=>h.pt!=null&&h.pt<=1).length, n=holes.filter(h=>h.pt!=null).length;
+  const sg18=P.rounds.reduce((s,r)=>s+r.sg/r.n*18,0)/P.rounds.length;
+  let h=`<div class="stats"><div class="stat"><b class="num">${avgProx==null?"–":fmt(avgProx,1)+" m"}</b><span>Ø zur Fahne</span></div>
+    <div class="stat"><b class="num">${n?Math.round(ud/n*100)+" %":"–"}</b><span>Up &amp; Down</span></div>
+    <div class="stat"><b class="num ${sg18>=0?"pos":"neg"}">${(sg18>=0?"+":"−")+fmt(Math.abs(sg18),1)}</b><span>vs. Tour / 18</span></div></div>`;
+  // Auswertung nach Wedge
+  const rows=WEDGES.map(w=>{const hs=holes.filter(x=>x.w===w);if(!hs.length)return"";const ph=hs.filter(x=>typeof x.p==="number");
+    const u=hs.filter(x=>x.pt!=null&&x.pt<=1).length;return `<span>${w}°</span><span>${hs.length}</span><span>${ph.length?fmt(ph.reduce((s,x)=>s+x.p,0)/ph.length,1)+" m":"–"}</span><span>${Math.round(u/hs.length*100)} %</span>`}).join("");
+  h+=`<div class="mini"><span>Wedge</span><span>Schläge</span><span>Ø Fahne</span><span>Up&amp;Down</span>${rows}</div><div class="res-list">`;
+  P.rounds.forEach((r,i)=>{
+    const d=new Date(r.at);
+    h+=`<div class="res"><span class="when">${d.toLocaleDateString("de-DE",{weekday:"short",day:"numeric",month:"short"})} · ${r.n} Löcher</span>
+      <span class="sg num ${r.sg>=0?"pos":"neg"}">${(r.sg>=0?"+":"−")+fmt(Math.abs(r.sg),1)}</span>
+      <span class="meta num">Up &amp; Down ${r.ud}/${r.n}${r.prox!=null?" · Ø "+fmt(r.prox,1)+" m zur Fahne":""}</span>
+      <button class="btn ghost" data-del="${i}" style="padding:4px 8px;font-size:.8rem">Löschen</button></div>`;
+  });
+  a.innerHTML=h+"</div>";
+  a.querySelectorAll("[data-del]").forEach(b=>{let armed=false;b.onclick=()=>{if(!armed){armed=true;b.textContent="Sicher?";return}P.rounds.splice(+b.dataset.del,1);saveRounds();renderResults()}});
+}
+function showSub(w){
+  $("#ptRound").setAttribute("aria-pressed",w==="round");$("#ptResults").setAttribute("aria-pressed",w==="results");
+  $("#pRoundArea").hidden=w!=="round";$("#pResultsArea").hidden=w!=="results";
+}
+$("#ptRound").onclick=()=>showSub("round");
+$("#ptResults").onclick=()=>showSub("results");
+
+function renderAll(){renderSide();renderSugg();renderTable()}
+window.PT.wedgeExport=()=>({steps:U().steps,wedges:WEDGES,positions:CLOCKS.map(c=>({label:cLabel(c),rows:GRIPS.map(g=>({g,lab:gLabel(g).replace("−","-"),v:WEDGES.map(w=>{const v=val(c,w,g);return v==null?null:toU(v)}),m:WEDGES.map(w=>isMeas(c,w,g))}))}))});
+renderAll(); renderRound(); renderResults();
+window.addEventListener("pt:units",()=>{const v=parseFloat(String($("#tgt").value).replace(",","."));target=v>0?fromU(v):null;renderAll();renderRound()});
+$("#puM").onclick=()=>{if(!pEditing)window.PT.setUnit("m")};
+$("#puS").onclick=()=>{if(!pEditing)window.PT.setUnit("steps")};
+})();
+</script>
+<script>
+if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))}
+</script>
+</body>
+</html>
