@@ -183,6 +183,7 @@ input[type=range].slope::-moz-range-track{background:linear-gradient(to right,va
 .status.err{color:var(--warn)}
 .sync{font-size:.75rem;color:var(--muted)}
 
+.modebar .seg{grid-template-columns:1fr 1.35fr 1fr}
 .modebar{padding-block:10px 0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 nav.tabs{grid-template-columns:none;grid-auto-columns:1fr;grid-auto-flow:column}
 /* Wedges */
@@ -249,6 +250,57 @@ nav.tabs{grid-template-columns:none;grid-auto-columns:1fr;grid-auto-flow:column}
 .hole .chips button{padding:4px 8px;font-size:.82rem}
 .mini{display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr));gap:4px 10px;font-size:.88rem;font-variant-numeric:tabular-nums;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:10px 12px}
 .mini span:nth-child(-n+4){color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+/* Journal */
+.jchips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.jchips::-webkit-scrollbar{display:none}
+.jchips button{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 12px;font-weight:600;font-size:.9rem;color:var(--muted)}
+.jchips button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.jlist{display:flex;flex-direction:column;gap:12px}
+.jintro{color:var(--muted);font-size:.9rem;margin:0;max-width:62ch}
+.jcard{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);overflow:hidden}
+.jcard.active{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+.jcard.arch{opacity:.6}
+.jhead{display:flex;align-items:flex-start;gap:8px;padding:12px 12px 0}
+.jhead h3{flex:1;min-width:0;margin:0;font-family:var(--f-display);font-size:1.15rem;font-weight:700;text-wrap:balance}
+.jhead .step{font-family:var(--f-display);font-weight:700;font-size:1.4rem;color:var(--accent);line-height:1;width:22px;flex:none}
+.jbtn{border:0;background:transparent;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none;color:var(--muted)}
+.jbtn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8}
+.jbtn.on{color:var(--flag)} .jbtn.on svg{fill:currentColor}
+.jtext{padding:6px 12px 12px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:.97rem}
+.jtext.empty{color:var(--muted);font-style:italic}
+.jdia{display:block;width:100%;height:auto;background:var(--surface-2);border-top:1px solid var(--line)}
+.jphotos{display:flex;gap:6px;padding:0 12px 12px;overflow-x:auto}
+.jphotos img{height:96px;width:auto;border-radius:8px;border:1px solid var(--line);cursor:zoom-in;flex:none}
+.jadd{border:1px dashed var(--line);background:transparent;border-radius:var(--r);padding:14px;font-weight:600;color:var(--accent)}
+.jfoot{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.jform{display:flex;flex-direction:column;gap:12px}
+.jform input[type=text],.jform textarea,.jform select{width:100%;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--surface)}
+.jform textarea{min-height:140px;resize:vertical;line-height:1.45}
+.jthumbs{display:flex;gap:8px;flex-wrap:wrap}
+.jthumb{position:relative}
+.jthumb img{height:72px;border-radius:8px;border:1px solid var(--line);display:block}
+.jthumb .jedit{position:static;width:auto;height:auto;margin-top:4px;border-radius:8px;background:var(--surface-2);color:var(--fg);border:1px solid var(--line);padding:3px 8px;font-size:.78rem;font-weight:600}
+.jthumb button[data-x]{position:absolute;top:-6px;right:-6px;width:24px;height:24px;border-radius:50%;border:0;background:var(--warn);color:#fff;font-weight:700;line-height:1}
+.jcheck{display:flex;align-items:center;gap:8px;font-weight:600}
+.jcheck input{width:20px;height:20px;accent-color:var(--accent)}
+.jzoom{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;padding:16px}
+.jzoom img{max-width:100%;max-height:100%;border-radius:8px}
+/* Skizzenblock */
+.skov{position:fixed;inset:0;z-index:70;background:var(--bg);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.skbar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-block:10px;padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px));border-bottom:1px solid var(--line)}
+.skbar b{font-family:var(--f-display);font-size:1.2rem}
+.skwrap{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:10px}
+.skwrap canvas{max-width:100%;max-height:100%;aspect-ratio:800/520;width:100%;height:auto;border-radius:12px;border:1px solid var(--line);touch-action:none;background:#cfe3c4}
+.sktools{display:flex;flex-direction:column;gap:8px;padding-block:8px 12px;padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px));border-top:1px solid var(--line)}
+.skrow{display:flex;gap:6px;align-items:center;overflow-x:auto;scrollbar-width:none}
+.skrow button{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 11px;font-weight:600;font-size:.9rem}
+.skrow button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.skrow .sksw{width:34px;height:34px;padding:0;border-radius:50%;border:2px solid var(--line)}
+.skrow .sksw[aria-pressed="true"]{outline:3px solid var(--accent);outline-offset:2px;background-clip:padding-box}
+.skrow input{flex:1;min-width:120px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--surface)}
+.skhint{color:var(--muted);font-size:.85rem;flex:none;white-space:normal}
+.skrow .skdanger{color:var(--warn);border-color:var(--warn)}
+.skrow[data-g="sub"]{flex-wrap:wrap;overflow:visible}
 @media (max-width:380px){.grip-panel{grid-template-columns:100px minmax(0,1fr)}.grip-svg{width:100px}}
 @media (prefers-reduced-motion:reduce){.beat{transition:none}}
 </style>
@@ -265,7 +317,7 @@ nav.tabs{grid-template-columns:none;grid-auto-columns:1fr;grid-auto-flow:column}
   </header>
 
   <div class="modebar"><div class="seg" role="group" aria-label="Bereich">
-    <button id="mPutt" aria-pressed="true">Putten</button><button id="mPitch" aria-pressed="false">Chippen &amp; Pitchen</button>
+    <button id="mPutt" aria-pressed="true">Putten</button><button id="mPitch" aria-pressed="false">Chippen &amp; Pitchen</button><button id="mJournal" aria-pressed="false">Journal</button>
   </div></div>
   <main id="main">
     <!-- DISTANZTABELLE -->
@@ -375,6 +427,11 @@ nav.tabs{grid-template-columns:none;grid-auto-columns:1fr;grid-auto-flow:column}
       </div>
     </section>
 
+    <!-- JOURNAL -->
+    <section class="view" id="v-jswing" hidden><div class="jchips" id="jsChips" role="group" aria-label="Schlagart"></div><div id="jsList" class="jlist"></div></section>
+    <section class="view" id="v-jtrain" hidden><div class="jchips" id="jxChips" role="group" aria-label="Übungsbereich"></div><div id="jxList" class="jlist"></div></section>
+    <section class="view" id="v-jstrat" hidden><div class="jchips" id="jtChips" role="group" aria-label="Bereich"></div><div id="jtList" class="jlist"></div></section>
+
     <!-- WEDGE-TEST -->
     <section class="view" id="v-ptest" hidden>
       <div class="seg">
@@ -391,6 +448,9 @@ nav.tabs{grid-template-columns:none;grid-auto-columns:1fr;grid-auto-flow:column}
     <button data-v="metro" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M8 21h8l-2-17h-4z"/><path d="M12 15l5-9"/></svg>Metronom</button>
     <button data-v="test" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M6 21V3l11 4-11 4"/><circle cx="16" cy="19" r="2"/></svg>Test</button>
     <button data-v="pchart" aria-selected="false" hidden><svg viewBox="0 0 24 24"><path d="M10 3v13"/><path d="M10 16l6 3-2 2-5-2"/><path d="M7 5h6M7 8h6"/></svg>Griff &amp; Tabelle</button>
+    <button data-v="jswing" aria-selected="false" hidden><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/></svg>Schwung</button>
+    <button data-v="jtrain" aria-selected="false" hidden><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1"/></svg>Übungen</button>
+    <button data-v="jstrat" aria-selected="false" hidden><svg viewBox="0 0 24 24"><ellipse cx="12" cy="15" rx="9" ry="5"/><ellipse cx="12" cy="15" rx="4" ry="2"/><path d="M14 15V3l5 2-5 2"/></svg>Strategie</button>
     <button data-v="ptest" aria-selected="false" hidden><svg viewBox="0 0 24 24"><path d="M6 21V3l11 4-11 4"/><circle cx="16" cy="19" r="2"/></svg>Test</button>
   </nav>
 </div>
@@ -408,7 +468,7 @@ const DEFAULT_STEPS=Array.from({length:20},(_,i)=>{const n=i+1;return n<=10?5*n+
 const stepM=()=>S.stepCm/100; // eigene Schrittlänge
 
 /* ---------- Zustand ---------- */
-const S={base:DEFAULT_BASE.slice(),baseSteps:DEFAULT_STEPS.slice(),unit:"m",stepCm:91,refStimp:8,stimp:8,slope:0,bpm:79,silent:1,rounds:[]};
+const S={base:DEFAULT_BASE.slice(),baseSteps:DEFAULT_STEPS.slice(),unit:"steps",stepCm:91,refStimp:8,stimp:8,slope:0,bpm:79,silent:1,rounds:[]};
 let editing=null; // Kopie der Werte im Bearbeitungsmodus
 let round=null;   // laufende Runde
 
@@ -422,10 +482,10 @@ round=lsGet("pt.round");
 function applySettings(d){
   if(Array.isArray(d.base)&&d.base.length===15&&d.base.every(n=>typeof n==="number"&&n>0)) S.base=d.base.slice();
   if(Array.isArray(d.baseSteps)&&d.baseSteps.length===20&&d.baseSteps.every(n=>typeof n==="number"&&n>0)) S.baseSteps=d.baseSteps.slice();
-  if(d.unit==="m"||d.unit==="steps") S.unit=d.unit;
+  if(d.uv===1&&(d.unit==="m"||d.unit==="steps")) S.unit=d.unit;
   for(const k of ["refStimp","stimp","slope","bpm","silent","stepCm"]) if(typeof d[k]==="number") S[k]=d[k];
 }
-function settingsDoc(){return{base:S.base,baseSteps:S.baseSteps,unit:S.unit,stepCm:S.stepCm,refStimp:S.refStimp,stimp:S.stimp,slope:S.slope,bpm:S.bpm,silent:S.silent}}
+function settingsDoc(){return{uv:1,base:S.base,baseSteps:S.baseSteps,unit:S.unit,stepCm:S.stepCm,refStimp:S.refStimp,stimp:S.stimp,slope:S.slope,bpm:S.bpm,silent:S.silent}}
 
 /* ---------- Speicher (db pro Person, sonst nur dieses Gerät) ---------- */
 let db=null, uid=null, settingsRef=null, roundsRef=null, lastWritten={s:"",r:""}, sDirty=false;
@@ -627,7 +687,7 @@ $("#btnSettings").addEventListener("click",()=>{
     <p>Ersetzt deine Schritt-Tabelle durch die Startwerte (10 cm bei 1 Schritt, +5 cm bis 10 Schritte, danach +2,5 cm). Die Meter-Tabelle folgt automatisch.</p>
     <div class="save-line"><button class="btn danger" id="resetBtn">Auf Startwerte zurücksetzen</button></div></div>
     <div class="ctl"><span class="ctl-label">Datensicherung</span>
-    <p>Deine Tabellen und Runden liegen nur auf diesem iPhone. Sichere sie ab und zu als Datei, z. B. in iCloud Drive.</p>
+    <p>Deine Tabellen, Runden und dein Journal samt Fotos liegen nur auf diesem iPhone. Sichere sie ab und zu als Datei, z. B. in iCloud Drive.</p>
     <div class="save-line"><button class="btn" id="bkOut">Sicherung speichern</button><button class="btn" id="bkIn">Sicherung laden</button></div>
     <input type="file" id="bkFile" accept="application/json,.json" hidden></div>
     <button class="btn" id="setClose">Schließen</button>`);
@@ -644,8 +704,9 @@ $("#btnSettings").addEventListener("click",()=>{
   });
   host.querySelector("#setClose").addEventListener("click",closeSheet);
   host.querySelector("#bkOut").addEventListener("click",async()=>{
-    const data={app:"putting-tempo",v:1,at:new Date().toISOString(),keys:{}};
+    const data={app:"putting-tempo",v:2,at:new Date().toISOString(),keys:{},photos:{}};
     try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith("pt."))data.keys[k]=localStorage.getItem(k)}}catch(e){}
+    try{if(window.PT.photoBackup)data.photos=await window.PT.photoBackup()}catch(e){}
     const d=new Date().toISOString().slice(0,10);
     if(await saveFile(`Golf-Sicherung ${d}.json`,new Blob([JSON.stringify(data)],{type:"application/json"}),"application/json")) toast("Sicherung bereit");
   });
@@ -654,6 +715,7 @@ $("#btnSettings").addEventListener("click",()=>{
   bf.addEventListener("change",async()=>{
     try{const d=JSON.parse(await bf.files[0].text());if(d.app!=="putting-tempo"||!d.keys)throw 0;
       Object.keys(d.keys).forEach(k=>{if(k.startsWith("pt."))localStorage.setItem(k,d.keys[k])});
+      if(d.photos&&window.PT.photoRestore)await window.PT.photoRestore(d.photos);
       toast("Sicherung geladen");setTimeout(()=>location.reload(),600);
     }catch(e){toast("Die Datei ist keine gültige Sicherung.")}
   });
@@ -842,8 +904,8 @@ $("#tabRound").onclick=()=>showSub("round");
 $("#tabResults").onclick=()=>showSub("results");
 
 /* ---------- Tabs ---------- */
-const TITLES={chart:"Distanztabelle",metro:"Putt-Metronom",test:"Putt-Testrunde",pchart:"Wedge-Tabelle",ptest:"Wedge-Testrunde"};
-const MODES={putt:["chart","metro","test"],pitch:["pchart","ptest"]};
+const TITLES={chart:"Distanztabelle",metro:"Putt-Metronom",test:"Putt-Testrunde",pchart:"Wedge-Tabelle",ptest:"Wedge-Testrunde",jswing:"Schwunggedanken",jstrat:"Strategie",jtrain:"Übungen"};
+const MODES={putt:["chart","metro","test"],pitch:["pchart","ptest"],journal:["jswing","jtrain","jstrat"]};
 function showView(v){
   document.querySelectorAll("nav.tabs button").forEach(x=>x.setAttribute("aria-selected",x.dataset.v===v));
   Object.keys(TITLES).forEach(k=>$("#v-"+k).hidden=k!==v);
@@ -852,16 +914,17 @@ function showView(v){
   try{localStorage.setItem("pt.tab",v)}catch(e){}
 }
 function setMode(m,view){
-  $("#mPutt").setAttribute("aria-pressed",m==="putt"); $("#mPitch").setAttribute("aria-pressed",m==="pitch");
+  $("#mPutt").setAttribute("aria-pressed",m==="putt"); $("#mPitch").setAttribute("aria-pressed",m==="pitch"); $("#mJournal").setAttribute("aria-pressed",m==="journal");
   document.querySelectorAll("nav.tabs button").forEach(x=>x.hidden=!MODES[m].includes(x.dataset.v));
   showView(view&&MODES[m].includes(view)?view:MODES[m][0]);
 }
 document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.v)));
 $("#mPutt").addEventListener("click",()=>setMode("putt"));
 $("#mPitch").addEventListener("click",()=>setMode("pitch"));
+$("#mJournal").addEventListener("click",()=>setMode("journal"));
 
 syncControls(); render(); renderRound(); renderResults();
-{let t=null;try{t=localStorage.getItem("pt.tab")}catch(e){} setMode(t==="pchart"||t==="ptest"?"pitch":"putt",t)}
+{let t=null;try{t=localStorage.getItem("pt.tab")}catch(e){} setMode(t==="pchart"||t==="ptest"?"pitch":t==="jswing"||t==="jstrat"||t==="jtrain"?"journal":"putt",t)}
 initStore();
 // Für Tests im Terminal
 window.__pt={playsLike,backstroke,tourPutts,DEFAULT_BASE};
@@ -942,7 +1005,7 @@ const gLabel=g=>g===GTOP?g+" cm (oben)":(g<0?"−"+(-g):g)+" cm";
 const BASE9={60:35,56:42,52:50,48:57,44:64};
 const CLOCK_F={"7:00":0.38,"7:30":0.5,"8:00":0.65,"8:30":0.8,"9:00":1,"10:00":1.2,"10:30":1.3,"11:00":1.38};
 function startVal(c,w,g){return Math.round(BASE9[w]*(CLOCK_F[c]||1)*(1-0.025*(GTOP-g))*2)/2}
-const P={custom:{},clock:"9:00",grip:18,wedge:56,rounds:[]};
+const P={custom:{},clock:"9:00",grip:18,wedge:56,unit:"m",rounds:[]};
 let pEditing=null, pRound=null, target=null;
 const key=(c,w,g)=>c+"|"+w+"|"+g;
 // Wert einer Zelle: deine Messung, sonst aus mind. 2 Messungen desselben Wedges (gleiche Ausholposition) entlang des Griffs berechnet, sonst null.
@@ -959,7 +1022,7 @@ function val(c,w,g){const k=key(c,w,g);return typeof P.custom[k]==="number"?P.cu
 const show=v=>v==null?"":fm(toU(v));
 function isMeas(c,w,g){return typeof P.custom[key(c,w,g)]==="number"}
 function fm(v){return fmt(v,v%1?1:0)}
-const U=()=>window.PT.units();
+const U=()=>({steps:P.unit==="steps",stepCm:window.PT.units().stepCm});
 function toU(m){const u=U();return u.steps?Math.round(m*100/u.stepCm*2)/2:m}
 function fromU(v){const u=U();return u.steps?Math.round(v*u.stepCm/10)/10:v}
 const uName=()=>U().steps?"Schr.":"m";
@@ -977,8 +1040,9 @@ function applyPitch(d){
   if(CLOCKS.includes(d.clock)) P.clock=d.clock;
   if(GRIPS.includes(d.grip)) P.grip=d.grip;
   if(WEDGES.includes(d.wedge)) P.wedge=d.wedge;
+  if(d.unit==="m"||d.unit==="steps") P.unit=d.unit;
 }
-const pitchDoc=()=>({gv:4,custom:P.custom,clock:P.clock,grip:P.grip,wedge:P.wedge});
+const pitchDoc=()=>({gv:4,unit:P.unit,custom:P.custom,clock:P.clock,grip:P.grip,wedge:P.wedge});
 
 /* ---------- Speicher ---------- */
 function makeDoc(path){
@@ -1157,7 +1221,7 @@ function renderRound(){
   let h=`<div class="holes">`;
   pRound.holes.forEach((x,i)=>{
     h+=`<div class="hole" data-i="${i}">
-      <div class="hole-main"><span class="hno">${i+1}</span><span class="hdist num">${x.d} m${window.PT.units().steps?` · ${fmt(Math.round(x.d*100/window.PT.units().stepCm*2)/2,1)} Schritte`:""}<small>Vorschlag: ${val(x.c,x.w,x.g)==null?"kein Tabellenwert":show(val(x.c,x.w,x.g))+" "+uName()} · Tour ${fmt(tourStrokes(x.d),2)} Schläge</small></span></div>
+      <div class="hole-main"><span class="hno">${i+1}</span><span class="hdist num">${x.d} m${U().steps?` · ${fmt(Math.round(x.d*100/U().stepCm*2)/2,1)} Schritte`:""}<small>Vorschlag: ${val(x.c,x.w,x.g)==null?"kein Tabellenwert":show(val(x.c,x.w,x.g))+" "+uName()} · Tour ${fmt(tourStrokes(x.d),2)} Schläge</small></span></div>
       <div class="miss"><div class="chips">${WEDGES.map(w=>`<button data-w="${w}" aria-pressed="${w===x.w}">${w}°</button>`).join("")}</div></div>
       <div class="miss"><label class="pfield">Ausholen <select data-c aria-label="Ausholposition Loch ${i+1}">${CLOCKS.map(c=>`<option value="${c}" ${c===x.c?"selected":""}>${cLabel(c)}</option>`).join("")}</select></label>
         <label class="pfield">Griff <select data-g aria-label="Griffposition Loch ${i+1}">${GRIPS.map(g=>`<option value="${g}" ${g===x.g?"selected":""}>${gLabel(g)}</option>`).join("")}</select></label></div>
@@ -1230,8 +1294,436 @@ function renderAll(){renderSide();renderSugg();renderTable()}
 window.PT.wedgeExport=()=>({steps:U().steps,wedges:WEDGES,positions:CLOCKS.map(c=>({label:cLabel(c),rows:GRIPS.map(g=>({g,lab:gLabel(g).replace("−","-"),v:WEDGES.map(w=>{const v=val(c,w,g);return v==null?null:toU(v)}),m:WEDGES.map(w=>isMeas(c,w,g))}))}))});
 renderAll(); renderRound(); renderResults();
 window.addEventListener("pt:units",()=>{const v=parseFloat(String($("#tgt").value).replace(",","."));target=v>0?fromU(v):null;renderAll();renderRound()});
-$("#puM").onclick=()=>{if(!pEditing)window.PT.setUnit("m")};
-$("#puS").onclick=()=>{if(!pEditing)window.PT.setUnit("steps")};
+function setPUnit(u){if(pEditing||P.unit===u)return;const v=parseFloat(String($("#tgt").value).replace(",","."));P.unit=u;target=v>0?fromU(v):null;renderAll();renderRound();savePitch(true)}
+$("#puM").onclick=()=>setPUnit("m");
+$("#puS").onclick=()=>setPUnit("steps");
+})();
+</script>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const {toast,openSheet,closeSheet,lsGet,lsSet}=window.PT;
+const esc=t=>String(t??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+const SWING=[["putt","Putten"],["chip","Chippen"],["pitch","Pitchen"],["iron","Eisen"],["wood","Hölzer"],["driver","Driver"],["drills","Drills"],["faults","Swing-Fehler"],["body","Körper & Fitness"],["gear","Material & Fitting"]];
+const STRAT=[["plan","Spielplan"],["decade","DECADE"],["tee","Abschlag"],["long","Lange Annäherung"],["short","Kurze Annäherung"],["around","Rund ums Grün"],["putting","Putten"],["routine","Pre-Shot-Routine"],["wind","Wind & Wetter"],["mental","Kopf"],["killer","Score-Killer"]];
+const TRAIN=[["x_plan","Trainingsplan"],["x_putt","Putten"],["x_short","Kurzspiel"],["x_range","Range & Driver"],["x_press","Druck & Spiele"]];
+const INTRO={
+  decade:"Die sechs Schritte für jede Entscheidung auf dem Platz. Trag zu jedem Schritt deine eigene Regel ein.",
+  killer:"Was dich auf einer Runde die meisten Schläge kostet. Darauf achtest du zuerst.",
+  drills:"Maintenance-Drills für die Schwunggefühle.",
+  faults:"Deine typischen Fehler und was dagegen hilft.",
+  gear:"Offene Fragen zu Schlägern und Messgeräten. Erledigtes archivierst du.",
+  plan:"Die großen Linien: wie du an einem Tag spielst.",
+  x_plan:"Woran du im Training arbeitest und wie."
+};
+
+/* ---------- Skizzenblock: selbst zeichnen, wird als Bild gespeichert ---------- */
+const SK_W=800, SK_H=520;
+const SHAPES={fairway:["Fairway","#9cc78a"],green:["Grün","#b9e0a5"],bunker:["Bunker","#ecdcae"],water:["Wasser","#86bcdc"],rough:["Rough","#6f9a5f"],disp:["Streuung",null]};
+const SYMS={flag:"Fahne",ball:"Ball",hole:"Loch",cross:"Ziel ×"};
+const COLORS=[["#d2442c","Rot"],["#2f6fd0","Blau"],["#ffffff","Weiß"],["#16201a","Schwarz"],["#e2b23c","Gelb"]];
+function blob(ctx,x1,y1,x2,y2,seed){ // weiche, leicht unregelmäßige Fläche
+  const cx=(x1+x2)/2, cy=(y1+y2)/2, rx=Math.abs(x2-x1)/2, ry=Math.abs(y2-y1)/2, n=10;
+  const pts=[];for(let i=0;i<n;i++){const a=i/n*Math.PI*2, w=1+0.09*Math.sin(seed*7.3+i*2.1);pts.push([cx+Math.cos(a)*rx*w,cy+Math.sin(a)*ry*w])}
+  ctx.beginPath();
+  for(let i=0;i<n;i++){const p0=pts[i],p1=pts[(i+1)%n],mx=(p0[0]+p1[0])/2,my=(p0[1]+p1[1])/2;if(i===0)ctx.moveTo(mx,my);else ctx.quadraticCurveTo(p0[0],p0[1],mx,my)}
+  ctx.quadraticCurveTo(pts[0][0],pts[0][1],(pts[0][0]+pts[1][0])/2,(pts[0][1]+pts[1][1])/2);ctx.closePath();
+}
+function drawItem(ctx,it){
+  ctx.save();
+  if(it.t==="pen"){ctx.strokeStyle=it.c;ctx.lineWidth=it.w||5;ctx.lineCap="round";ctx.lineJoin="round";ctx.beginPath();it.p.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));if(it.p.length===1)ctx.lineTo(it.p[0][0]+.1,it.p[0][1]);ctx.stroke()}
+  else if(it.t==="shape"){
+    if(it.k==="disp"){ctx.setLineDash([12,9]);ctx.strokeStyle=it.c||"#16201a";ctx.lineWidth=3;ctx.beginPath();ctx.ellipse((it.x1+it.x2)/2,(it.y1+it.y2)/2,Math.max(1,Math.abs(it.x2-it.x1)/2),Math.max(1,Math.abs(it.y2-it.y1)/2),0,0,Math.PI*2);ctx.stroke()}
+    else{blob(ctx,it.x1,it.y1,it.x2,it.y2,it.s||1);ctx.fillStyle=SHAPES[it.k][1];ctx.fill();if(it.k==="green"){ctx.strokeStyle="#8cc278";ctx.lineWidth=6;ctx.stroke()}
+      if(it.k==="water"){ctx.strokeStyle="rgba(255,255,255,.55)";ctx.lineWidth=2;const cx=(it.x1+it.x2)/2,cy=(it.y1+it.y2)/2;for(let k=-1;k<=1;k++){ctx.beginPath();ctx.moveTo(cx-20,cy+k*16);ctx.quadraticCurveTo(cx-10,cy+k*16-6,cx,cy+k*16);ctx.quadraticCurveTo(cx+10,cy+k*16+6,cx+20,cy+k*16);ctx.stroke()}}}
+  }
+  else if(it.t==="sym"){
+    ctx.translate(it.x,it.y);ctx.scale(it.z||1,it.z||1);
+    if(it.k==="flag"){ctx.fillStyle="#1d2a20";ctx.beginPath();ctx.ellipse(0,0,7,4,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle="#333";ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(0,-56);ctx.stroke();ctx.fillStyle=it.c||"#d2442c";ctx.beginPath();ctx.moveTo(0,-56);ctx.lineTo(30,-46);ctx.lineTo(0,-36);ctx.closePath();ctx.fill()}
+    if(it.k==="ball"){ctx.fillStyle="#fff";ctx.strokeStyle="#555";ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(0,0,8,0,Math.PI*2);ctx.fill();ctx.stroke()}
+    if(it.k==="hole"){ctx.fillStyle="#111";ctx.strokeStyle="#fff";ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(0,0,11,0,Math.PI*2);ctx.fill();ctx.stroke()}
+    if(it.k==="cross"){ctx.strokeStyle=it.c||"#d2442c";ctx.lineWidth=5;ctx.lineCap="round";ctx.beginPath();ctx.moveTo(-12,-12);ctx.lineTo(12,12);ctx.moveTo(12,-12);ctx.lineTo(-12,12);ctx.stroke()}
+  }
+  else if(it.t==="text"){const z=it.z||1;ctx.font=`600 ${30*z}px Barlow, system-ui, sans-serif`;ctx.fillStyle=it.c;ctx.textBaseline="middle";ctx.lineWidth=5*z;ctx.strokeStyle=it.c==="#ffffff"?"rgba(0,0,0,.45)":"rgba(255,255,255,.75)";ctx.strokeText(it.s,it.x,it.y);ctx.fillText(it.s,it.x,it.y)}
+  ctx.restore();
+}
+function bbox(ctx,it){
+  if(it.t==="pen"){let a=1e9,b=1e9,c=-1e9,d=-1e9;it.p.forEach(([x,y])=>{a=Math.min(a,x);b=Math.min(b,y);c=Math.max(c,x);d=Math.max(d,y)});const w=(it.w||5)/2+4;return {x1:a-w,y1:b-w,x2:c+w,y2:d+w}}
+  if(it.t==="shape")return {x1:Math.min(it.x1,it.x2),y1:Math.min(it.y1,it.y2),x2:Math.max(it.x1,it.x2),y2:Math.max(it.y1,it.y2)};
+  const z=it.z||1;
+  if(it.t==="sym"){const r=it.k==="flag"?{x1:-10,y1:-60,x2:34,y2:6}:it.k==="ball"?{x1:-10,y1:-10,x2:10,y2:10}:it.k==="hole"?{x1:-13,y1:-13,x2:13,y2:13}:{x1:-15,y1:-15,x2:15,y2:15};return {x1:it.x+r.x1*z,y1:it.y+r.y1*z,x2:it.x+r.x2*z,y2:it.y+r.y2*z}}
+  ctx.save();ctx.font=`600 ${30*z}px Barlow, system-ui, sans-serif`;const w=ctx.measureText(it.s).width;ctx.restore();
+  return {x1:it.x-4,y1:it.y-19*z,x2:it.x+w+4,y2:it.y+19*z};
+}
+function segDist(px,py,ax,ay,bx,by){const dx=bx-ax,dy=by-ay,l=dx*dx+dy*dy;let t=l?((px-ax)*dx+(py-ay)*dy)/l:0;t=Math.max(0,Math.min(1,t));return Math.hypot(px-ax-t*dx,py-ay-t*dy)}
+function hit(ctx,it,x,y){
+  if(it.t==="pen"){const p=it.p;if(p.length===1)return Math.hypot(x-p[0][0],y-p[0][1])<20;for(let i=1;i<p.length;i++)if(segDist(x,y,p[i-1][0],p[i-1][1],p[i][0],p[i][1])<18)return true;return false}
+  if(it.t==="shape"&&it.k==="disp"){const cx=(it.x1+it.x2)/2,cy=(it.y1+it.y2)/2,rx=Math.abs(it.x2-it.x1)/2+1,ry=Math.abs(it.y2-it.y1)/2+1;const v=((x-cx)/rx)**2+((y-cy)/ry)**2;return v<1.35&&v>0.55||(rx<40||ry<40)&&v<1.35}
+  if(it.t==="shape"){const cx=(it.x1+it.x2)/2,cy=(it.y1+it.y2)/2,rx=Math.abs(it.x2-it.x1)/2+1,ry=Math.abs(it.y2-it.y1)/2+1;return ((x-cx)/rx)**2+((y-cy)/ry)**2<=1.05}
+  const b=bbox(ctx,it);return x>=b.x1-8&&x<=b.x2+8&&y>=b.y1-8&&y<=b.y2+8;
+}
+const hasColor=it=>it.t==="pen"||it.t==="text"||(it.t==="sym"&&it.k!=="ball")||(it.t==="shape"&&it.k==="disp");
+function moveItem(it,o,dx,dy){
+  if(it.t==="pen")it.p=o.p.map(([x,y])=>[x+dx,y+dy]);
+  else if(it.t==="shape"){it.x1=o.x1+dx;it.x2=o.x2+dx;it.y1=o.y1+dy;it.y2=o.y2+dy}
+  else{it.x=o.x+dx;it.y=o.y+dy}
+}
+function scaleItem(it,o,b0,cx,cy){
+  const sx=Math.max(.15,(cx-b0.x1)/Math.max(1,b0.x2-b0.x1)), sy=Math.max(.15,(cy-b0.y1)/Math.max(1,b0.y2-b0.y1));
+  if(it.t==="pen")it.p=o.p.map(([x,y])=>[b0.x1+(x-b0.x1)*sx,b0.y1+(y-b0.y1)*sy]);
+  else if(it.t==="shape"){const f=(v,a,s)=>a+(v-a)*s;it.x1=f(o.x1,b0.x1,sx);it.x2=f(o.x2,b0.x1,sx);it.y1=f(o.y1,b0.y1,sy);it.y2=f(o.y2,b0.y1,sy)}
+  else{const s=Math.max(sx,sy);it.z=Math.max(.4,Math.min(5,(o.z||1)*s));it.x=b0.x1+(o.x-b0.x1)*s;it.y=b0.y1+(o.y-b0.y1)*s}
+}
+function openSketch(onDone,init){
+  const items=(init||[]).map(i=>JSON.parse(JSON.stringify(i))); let tool=init&&init.length?"select":"pen", color=COLORS[0][0], shape="green", sym="flag", cur=null, sel=-1, drag=null;
+  const ov=document.createElement("div"); ov.className="skov";
+  ov.innerHTML=`<div class="skbar"><button class="btn" data-a="cancel">Abbrechen</button><b>Skizze</b><button class="btn primary" data-a="done">Übernehmen</button></div>
+    <div class="skwrap"><canvas width="${SK_W}" height="${SK_H}" aria-label="Zeichenfläche"></canvas></div>
+    <div class="sktools">
+      <div class="skrow" data-g="tool">${[["select","Auswählen"],["pen","Stift"],["shape","Fläche"],["sym","Symbol"],["text","Text"]].map(([k,n])=>`<button data-tool="${k}">${n}</button>`).join("")}
+        <button data-a="undo" aria-label="Rückgängig">↶</button><button data-a="clear">Leeren</button></div>
+      <div class="skrow" data-g="sub"></div>
+    </div>`;
+  document.body.appendChild(ov);
+  const cv=ov.querySelector("canvas"), ctx=cv.getContext("2d"), history=[];
+  const snap=()=>{history.push(JSON.stringify(items));if(history.length>60)history.shift()};
+  function paint(){
+    ctx.fillStyle="#cfe3c4";ctx.fillRect(0,0,SK_W,SK_H);items.forEach(it=>drawItem(ctx,it));if(cur)drawItem(ctx,cur);
+    if(tool==="select"&&items[sel]){const b=bbox(ctx,items[sel]);ctx.save();ctx.setLineDash([8,6]);ctx.strokeStyle="#2f8a4c";ctx.lineWidth=2.5;ctx.strokeRect(b.x1-6,b.y1-6,b.x2-b.x1+12,b.y2-b.y1+12);
+      ctx.setLineDash([]);ctx.fillStyle="#fff";ctx.strokeStyle="#2f8a4c";ctx.lineWidth=3;ctx.beginPath();ctx.arc(b.x2+6,b.y2+6,14,0,Math.PI*2);ctx.fill();ctx.stroke();
+      ctx.beginPath();ctx.moveTo(b.x2-1,b.y2+6);ctx.lineTo(b.x2+13,b.y2+6);ctx.moveTo(b.x2+6,b.y2-1);ctx.lineTo(b.x2+6,b.y2+13);ctx.stroke();ctx.restore()}
+  }
+  function sub(){
+    const r=ov.querySelector('[data-g="sub"]'); const it=items[sel];
+    if(tool==="select"){
+      if(!it){r.innerHTML=`<span class="skhint">Element antippen, dann ziehen. Am runden Griff ändert sich die Größe.</span>`}
+      else r.innerHTML=`<button data-a="del" class="skdanger">Löschen</button><button data-a="front">Nach vorne</button><button data-a="back">Nach hinten</button>`+
+        (hasColor(it)?COLORS.map(([c,n])=>`<button class="sksw" data-col="${c}" aria-pressed="${c===(it.c||"#d2442c")}" aria-label="${n}" style="background:${c}"></button>`).join(""):"");
+    }
+    else if(tool==="shape") r.innerHTML=Object.keys(SHAPES).map(k=>`<button data-shape="${k}" aria-pressed="${k===shape}">${SHAPES[k][0]}</button>`).join("")+`<span class="skhint">aufziehen</span>`;
+    else if(tool==="sym") r.innerHTML=Object.keys(SYMS).map(k=>`<button data-sym="${k}" aria-pressed="${k===sym}">${SYMS[k]}</button>`).join("")+`<span class="skhint">antippen</span>`;
+    else r.innerHTML=COLORS.map(([c,n])=>`<button class="sksw" data-col="${c}" aria-pressed="${c===color}" aria-label="${n}" style="background:${c}"></button>`).join("")+(tool==="text"?`<input type="text" id="skText" placeholder="Text, dann antippen" maxlength="40">`:"");
+    ov.querySelectorAll("[data-tool]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.tool===tool));
+  }
+  ov.addEventListener("click",e=>{
+    const b=e.target.closest("button"); if(!b) return;
+    if(b.dataset.tool){tool=b.dataset.tool;if(tool!=="select")sel=-1;sub();paint()}
+    else if(b.dataset.shape){shape=b.dataset.shape;sub()}
+    else if(b.dataset.sym){sym=b.dataset.sym;sub()}
+    else if(b.dataset.col){
+      if(tool==="select"&&items[sel]){snap();items[sel].c=b.dataset.col;sub();paint()}
+      else{const t=ov.querySelector("#skText");const v=t?t.value:"";color=b.dataset.col;sub();const t2=ov.querySelector("#skText");if(t2)t2.value=v}}
+    else if(b.dataset.a==="del"&&items[sel]){snap();items.splice(sel,1);sel=-1;sub();paint()}
+    else if(b.dataset.a==="front"&&items[sel]){snap();items.push(items.splice(sel,1)[0]);sel=items.length-1;paint()}
+    else if(b.dataset.a==="back"&&items[sel]){snap();items.unshift(items.splice(sel,1)[0]);sel=0;paint()}
+    else if(b.dataset.a==="undo"){if(history.length){const h=JSON.parse(history.pop());items.length=0;items.push(...h);sel=-1;sub();paint()}}
+    else if(b.dataset.a==="clear"){if(b.dataset.armed){snap();items.length=0;sel=-1;sub();paint();delete b.dataset.armed;b.textContent="Leeren"}else{b.dataset.armed=1;b.textContent="Sicher?"}}
+    else if(b.dataset.a==="cancel"){ov.remove()}
+    else if(b.dataset.a==="done"){if(!items.length){toast("Die Skizze ist noch leer.");return}sel=-1;paint();
+      const clean=items.map(it=>it.t==="pen"?{...it,p:it.p.map(([x,y])=>[Math.round(x),Math.round(y)])}:it);
+      cv.toBlob(bl=>{ov.remove();onDone(bl,clean)},"image/png")}
+  });
+  const pos=e=>{const r=cv.getBoundingClientRect();return [(e.clientX-r.left)*SK_W/r.width,(e.clientY-r.top)*SK_H/r.height]};
+  cv.addEventListener("pointerdown",e=>{
+    cv.setPointerCapture(e.pointerId); const [x,y]=pos(e);
+    if(tool==="select"){
+      const it=items[sel];
+      if(it){const b=bbox(ctx,it);if(Math.hypot(x-(b.x2+6),y-(b.y2+6))<34){snap();drag={mode:"size",o:JSON.parse(JSON.stringify(it)),b0:b};return}}
+      let found=-1;for(let i=items.length-1;i>=0;i--)if(hit(ctx,items[i],x,y)){found=i;break}
+      sel=found;sub();
+      if(found>=0){snap();drag={mode:"move",o:JSON.parse(JSON.stringify(items[found])),x0:x,y0:y,moved:false}}
+      paint();return;
+    }
+    if(tool==="pen") cur={t:"pen",c:color,w:5,p:[[x,y]]};
+    else if(tool==="shape") cur={t:"shape",k:shape,x1:x,y1:y,x2:x,y2:y,s:Math.random()*10};
+    else if(tool==="sym"){snap();items.push({t:"sym",k:sym,x,y,z:1,c:sym==="ball"?undefined:"#d2442c"})}
+    else if(tool==="text"){const t=ov.querySelector("#skText");const v=(t&&t.value.trim())||"";if(!v){toast("Erst Text eingeben, dann antippen.");t&&t.focus();return}snap();items.push({t:"text",x,y,s:v,c:color,z:1});t.value=""}
+    paint();
+  });
+  cv.addEventListener("pointermove",e=>{
+    const [x,y]=pos(e);
+    if(drag&&items[sel]){if(drag.mode==="move"){moveItem(items[sel],drag.o,x-drag.x0,y-drag.y0);drag.moved=true}else scaleItem(items[sel],drag.o,drag.b0,x-6,y-6);paint();return}
+    if(!cur)return;
+    if(cur.t==="pen"){const l=cur.p[cur.p.length-1];if(Math.hypot(x-l[0],y-l[1])>=3)cur.p.push([x,y])}else{cur.x2=x;cur.y2=y}
+    paint();
+  });
+  const end=()=>{
+    if(drag){if(drag.mode==="move"&&!drag.moved)history.pop();drag=null;return}
+    if(!cur)return;
+    if(cur.t!=="shape"||(Math.abs(cur.x2-cur.x1)>12&&Math.abs(cur.y2-cur.y1)>12)){snap();items.push(cur)}
+    cur=null;paint();
+  };
+  cv.addEventListener("pointerup",end); cv.addEventListener("pointercancel",end);
+  sub(); paint();
+}
+
+/* ---------- Startinhalt ---------- */
+let uid=0; const nid=()=>Date.now().toString(36)+(uid++).toString(36);
+function seed(){
+  const c=(sec,title,text,d)=>({id:nid(),sec,title,text,dia:d||"",photos:[],active:false,arch:false});
+  return [
+    c("decade","D – Distance",""),c("decade","E – Expectation",""),c("decade","C – Correct Target",""),
+    c("decade","A – Analyze",""),c("decade","D – Discipline",""),c("decade","E – Execute",""),
+    c("tee","Tee-Seite wählen","Auf der Seite des Trouble aufteen und vom Trouble weg spielen. So zeigt die ganze Streuung ins Freie."),
+    c("long","Aus 200–150 m: Doppelbogey vermeiden","Gilt etwa von Holz 4 bis Eisen 7.\nZiel ist die Grünmitte, nicht die Fahne.\nFehler auf die Bail-out-Seite, von der ein leichter Chip bleibt. Grün + 1 ist kein Drama."),
+    c("long","Streuung kennen","Meine Streuung pro Schläger ist eher eine längliche Ellipse als ein Punkt. Das Ziel so wählen, dass die ganze Ellipse sicher liegt."),
+    c("short","Ab Eisen 9: näher an die Fahne","Mit kurzen Eisen und Wedges zwischen Grünmitte und Fahne zielen."),
+    c("around","Chip-Plan","Ball flach halten, Schlägerkopf langsam.\nVom Vorgrün putten, wenn es geht.\nPutt-Bewegung mit einem längeren Schläger.\nMuss ich Rough überfliegen: mindestens die Hälfte rollen lassen.\nShort-sided: Sicherheit vor Risiko.\nNicht auf einen „leichteren“ Putt spielen, sondern aufs Grün."),
+    c("putting","Tempo vor Linie","„Lieber zu lang“ kostet Schläge. Aus etwa 6 m gibt es ein Tempo-Fenster von rund 1,2–1,5 m: von knapp vor dem Loch bis etwa 60–90 cm dahinter."),
+    c("killer","Score-Killer","Strafschläge\n3-Putts\nSchlechte Lage nach dem Abschlag (Bäume, Aus-Nähe)\nVerpatzte Chips\nSchläge von 30 m bis PW\nDoppelbogeys"),
+    c("iron","Zwischenziel beim Ausrichten","Das echte Ziel wirkt aus der Ansprechposition weiter links, als es ist. Dann schwinge ich über den Ball und slice.\nDeshalb: Zwischenziel kurz vor dem Ball auf der Ziellinie wählen und danach ausrichten.")
+  ];
+}
+
+/* ---------- Deine Notizen (einmalig ergänzt) ---------- */
+const NOTES1=[
+  ["n1","drills","Aus der Set-Position starten","Kraft aus dem linken Bein, über dem Ball bleiben.\nFür den Schwung nicht sofort 10/10 aufs linke Bein, das rechte Bein bleibt bei etwa 6/10."],
+  ["n2","drills","Gefühl wie mit dem Swingtrainer-Ball","3/4 bis 1/2 Schwung."],
+  ["n3","drills","Tempo-Swings","Hände vor dem Schlägerkopf."],
+  ["n4","drills","Step-Drill: einarmig zum Top of Backswing","Zum Top nur aufdrehen, indem die Hüfte gerade nach hinten geht. Kein Slide!\nSpüren: Druck im rechten Bein, Verbindung zum Ball halten, linke Schulter „hinter“ dem Ball."],
+  ["n5","drills","Release über Hand-Speed","Betonung auf Hand-Speed, nicht auf Handgelenk-Speed."],
+  ["n6","chip","Offenes Schlägerblatt durch Rotation schließen","Schlägerblatt im Setup komplett offen, Ballposition eher hinten.\nDas offene Blatt durch Körperrotation schließen: flache Bälle mit viel Spin."],
+  ["n7","faults","Spinning out","Auch beim Chippen und im vollen Schwung den Ball „seitlich“ spielen.\nIm Gefühl: Release mehr in Richtung rechte Toe-Line."],
+  ["n8","gear","Lie-Winkel zu flach?","Schläger mehr „aufstellen“: lange Arme, bei normalem Griff zeigt die Spitze (Toe) des Schlägerblatts nach oben."],
+  ["n9","gear","Driver-Spin zu hoch?",""],
+  ["n10","gear","Eisen 5: T200 statt T100","Wegen Höhe und Ballspeed."],
+  ["n11","gear","Putter: Lie-Angle-Balanced?","Keine Priorität."],
+  ["n12","gear","Längen-Gapping prüfen","Passt das Gapping? Z. B. Eisen 5 und Hybrid gleich lang?\nAuf Club- und Ballspeed abstimmen."],
+  ["n13","gear","Messgerät / Arccos Air","Ein Messgerät für Anfang und Ende des Grüns und/oder Arccos Air, um Schwächen aufzuspüren."],
+  ["n14","putt","Letztes Drittel lesen","Lies das letzte Drittel des Putts und stell dir vor, mit welchem Tempo der Ball am Loch ankommen muss."],
+  ["n15","putt","System: Schritte → Ausholweg","x Schritte entsprechen y cm Ausholweg (siehe Distanztabelle)."],
+  ["n16","putt","Unterkörper ruhig","Mit dem Rückschwung putten und den Unterkörper absolut ruhig halten."],
+  ["n17","chip","VSP + Scheffler-Video","VSP und dann wie im Scottie-Scheffler-Video."],
+  ["n18","chip","Eine Ebene, Gleichzeitigkeit","„Auf einer Ebene bleiben“ und Gleichzeitigkeit von Oberkörper und Schläger herstellen.\nHände vor dem Schlägerkopf, kein Handgelenk."],
+  ["n19","pitch","Habe ein System!","Unterschiedliche Schwunglängen zu timen fällt mir schwer, besonders bei kurzen bis mittellangen Schlägen.\nDeshalb mit dem Griffsystem arbeiten: immer in dieselbe Position schwingen, aber den Schläger unterschiedlich lang greifen (siehe Wedge-Tabelle)."]
+];
+const NOTES2=[
+  ["a1","putting","Grün lesen: Apex und Startlinie","Der Apex liegt bei etwa 60 % der Kurve, nicht in der Mitte.\nDie Startlinie ist die Tangente an die Kurve und liegt höher, als man denkt. Typischer Fehler: zu wenig Break lesen."],
+  ["a2","putting","Plunge Point ist nicht die Startlinie","Viele lesen nur bis zum Plunge Point. Er liegt bei etwa zwei Dritteln des Wegs, auf halber Strecke zwischen echter Startlinie und Loch.\nWer darauf zielt, spielt zu tief. Die echte Startlinie liegt weiter oben."],
+  ["a3","putting","10-%-Regel","Lange Putts sollen innerhalb von 10 % der Distanz liegen bleiben.\n9 m → innerhalb 90 cm\n15 m → innerhalb 1,5 m"],
+  ["a4","putting","Die Säulen des Puttens","1. Tempo: verhindert 3-Putts und macht den zweiten Putt leichter.\n2. Gut lesen: Fehler auf der hohen Seite.\n3. Ball auf der Linie starten.\n4. Spielen, um zu lochen, im eigenen Rhythmus."],
+  ["a5","putt","Augen müssen der Schlagfläche zustimmen","Den Sweet Spot auf die gewählte Startlinie richten.\nKopf und Augen so lange anpassen, bis die Ausrichtung auch für die Augen richtig aussieht. Erst dann entsteht Commitment. Sonst war das Lesen umsonst."],
+  ["a6","decade","Bogey-Vermeidung","Bessere Scores kommen vor allem durch weniger Bogeys und Doppelbogeys, nicht durch mehr Birdies."],
+  ["a7","killer","Innerhalb 90 m wie ein Par 3 zählen","Alle Schläge von innerhalb ca. 90 m als eigenes Par 3 werten und den Score notieren."],
+  ["a8","long","Höher gelegenes Grün","Liegt das Grün höher, landet der Ball flacher und rollt weiter aus."],
+  ["a9","long","Mehr Grüns treffen","1. Treffmoment: Je konstanter, desto berechenbarer die Länge.\n2. Richtiger Schläger: Distanz, Lage, Bedingungen.\n3. Ziel: nach der eigenen Streuung wählen."],
+  ["a10","long","Schlägerwahl","Distanz: bis Grünanfang, bis Fahne, bis Grünende und wie weit ich jeden Schläger schlage.\nLage: Liegt der Ball sauber? Bekomme ich genug Schläger an den Ball für den geplanten Schlag?\nBedingungen: warm oder kalt, Gegen- oder Rückenwind?"],
+  ["a11","tee","Wann nicht Driver","Driver weglassen, wenn …\n– er ein Hindernis ins Spiel bringt\n– ein anderer Schläger die nötige Kurve deutlich leichter macht\n– die Lochform ihn zu weit gehen lässt\n– meine Driver-Streuung zu breit für den Platz ist"],
+  ["a12","around","Vor jedem kurzen Schlag","1. Lage: bestimmt, was möglich ist.\n2. Landepunkt: hoch gespielt landet näher an der Fahne, flach gespielt näher bei mir. Cut- oder Draw-Spin einplanen.\n3. Können: Nur weil ein Schlag möglich ist, ist er nicht der richtige für mich."],
+  ["a13","plan","Weg zu besseren Scores","1. Keine Schläge am Abschlag verschenken.\n2. Die Streuung zielen, nicht den einen Ball.\n3. Das Spiel spielen, das ich heute dabei habe.\n4. Auf 10 Grüns kommen.\n5. Fehlschläge in Pars verwandeln.\n6. 3-Putts vermeiden."],
+  ["a14","plan","A-, B- oder C-Spiel?","A – sauber getroffen, Ball unter Kontrolle: grünes Licht für die meisten Fahnen.\nB – Bringt ein Fehler großen Ärger, Fahne meiden; ist Platz drumherum, aggressiver. Streuung und Umgebung der Fahne prüfen.\nC – Fehlschläge, Kurve schwer zu kontrollieren: dicke Grünmitte, Ziele so groß wie möglich."],
+  ["a15","wind","Gegenwind kostet mehr","Gegenwind schadet etwa doppelt so viel, wie Rückenwind hilft."],
+  ["a16","wind","Wind-Faustformel","Gegenwind: pro km/h etwa 0,6–0,8 m mehr einplanen (ca. 1–1,5 Yards pro mph).\nRückenwind: pro km/h etwa 0,3 m abziehen (ca. ½ Yard pro mph)."],
+  ["a17","wind","Regen","Driver mit nassem Ball: etwa 14 m kürzer.\nMittleres Eisen vom nassen Fairway: bis zu etwa 4–5 m weiter.\nWedges: etwa 5–6 m kürzer und höher, weil Reibung fehlt."],
+  ["a18","mental","Nervosität am ersten Abschlag","1. Gut vorbereitet zum ersten Tee kommen.\n2. Das Gefühl anders benennen, z. B. Vorfreude statt Angst.\n3. Zwei-Boxen-Prozess: erst überlegen und entscheiden, dann nur noch schlagen.\n4. Erwartungen realistisch halten."],
+  ["a19","body","Stabil und mobil","Stabil: Fuß, Knie, unterer Rücken, Schulterblatt, Ellbogen.\nMobil: Sprunggelenk, Hüfte, Brustwirbelsäule, Schulter, Handgelenk."],
+  ["a20","x_putt","Ausrichtung auf der Matte","Startlinie festlegen, Sweet Spot darauf ausrichten. Kopf und Augen anpassen, bis die Linie auch für die Augen stimmt.\nZiel: Der Ball startet auf der gelesenen Linie."],
+  ["a21","x_putt","Field Goal","Zwei Tees links und rechts vor dem Loch stecken. Aus verschiedenen Distanzen und Winkeln durch das Tor putten."],
+  ["a22","x_putt","Umbrella","Start bei 1 m. Eingelocht: zwei Schritte zurück. Knapp daneben, aber nah am Loch: ein Schritt zurück.\nZiel: bis an den Grünrand kommen."],
+  ["a23","x_putt","Kreis-Drill","Bälle im Kreis um das Loch verteilen, z. B. auf 0,9 / 1,2 / 1,5 m oder 0,9 / 1,8 / 2,7 m. Jeden lochen und das Ergebnis als x/10 notieren."],
+  ["a24","x_putt","Tempo-Zone","Aus größerer Distanz putten. Gut ist, wenn der Ball zwischen etwa 60 cm vor und 1,2 m hinter dem Loch liegen bleibt. Treffer in der Zone zählen."],
+  ["a25","x_short","Par 18","9 Positionen rund ums Grün wählen. Mit einem Ball chippen und einputten wie auf einem Loch, Schläge zählen. Ziel: 18 oder besser. Erstes Ergebnis als Maßstab, danach den Rekord schlagen.\nSchwerer: Ball fallen lassen statt hinlegen, schwierige Fahnen, Bunker dazu."],
+  ["a26","x_range","Fairway Lock-in","Auf der Range ein ca. 18 m breites Fairway festlegen. 10 Driver schlagen und zählen, wie viele drin landen. Jede Woche verbessern."],
+  ["a27","x_range","Streuung messen","Im Simulator 25–50 Driver schlagen. Echte Ausreißer streichen. Die weitesten normalen Schläge links und rechts ansehen: Wie breit ist die Streuung, und ist sie gleichmäßig?"],
+  ["a28","x_press","1-Ball-Drucktest","5 Ziele wie 5 Löcher wählen. Nur ein Ball, keine Wiederholung. Jeden Schlag wie Par, Bogey usw. werten."],
+  ["a29","x_plan","Trainingsprioritäten","1. Driving: Länge und Genauigkeit.\n2. Annäherung: Treffmoment und Längenkontrolle.\n3. Kurzspiel: schwierige Lagen üben.\n4. Putten: die Distanzen trainieren, die mich Schläge kosten.\nÜben ohne Rückmeldung ist verschwendete Zeit."]
+];
+const NOTES3=[
+  ["b1","x_press","30-m-Skills-Test (Putten)","Putts aus etwa 1,5 / 3 / 4,5 / 6 m an 5 zufällig gewählten Löchern.\nDie Meter aller gelochten Putts addieren. Ziel: mehr als 30 m gelocht."],
+  ["b2","iron","Ballflug-Gesetze","Treffmoment-Faktoren: Schlägerkopf-Tempo (Länge), Schwungbahn, Schlagflächenstellung und Fläche-zu-Bahn (Differenz aus beiden).\n1. Die Schlagfläche bestimmt etwa 85 % der Startrichtung.\n2. Die Kurve entsteht aus der Differenz zwischen Schlagfläche und Schwungbahn: je größer die Differenz, desto stärker die Kurve.\nDraw: Bahn von innen, Fläche zur Bahn geschlossen – der Ball startet rechts und dreht nach links."],
+  ["b3","x_plan","Plan für die Range","1. 10–15 Min. Wedges zum Einspielen, immer auf ein Ziel.\n2. 15 Min. Technik am Schwung.\n3. 10 Min. lange Schläger auf ein Ziel, mit der passenden Flugkurve.\n4. Zum Schluss Leistung unter Druck, z. B. 1-Ball-Drucktest."]
+];
+const NOTES4=[
+  ["c1","routine","Pre-Shot-Routine in 5 Schritten","1. Entscheiden: Was soll passieren? Flugkurve und genaues Ziel festlegen, z. B. „kleiner Draw, Start auf die Bunkerkante, landet 2 m rechts der Fahne“.\n2. Visualisieren: den Schlag vor dem inneren Auge sehen.\n3. Ruhig werden: einen Schritt zurück, tief durchatmen, den Körper lockern.\n4. Probeschwung mit dem Gefühl des echten Schlags, für genau diese Distanz. Das Gefühl merken.\n5. Commit: genau dieses Gefühl am Ball umsetzen, ohne neue Gedanken."],
+  ["c2","routine","Post-Shot-Routine","Nach dem Schlag kurz auswerten: Was ist passiert, was habe ich gut gemacht?\nGute Schläge bewusst abspeichern, um Selbstvertrauen aufzubauen. Bei schlechten nur kurz lernen und abhaken."],
+  ["c3","x_putt","Tempo-Fenster aus 9 / 6 / 3 m (DECADE)","Von jeder Distanz putten, bis der Ball im Fenster liegen bleibt (10-%-Regel).\nFenster laut Skizze: ca. 90 cm lang, aufgeteilt in 60 cm und 30 cm.\nSo lange wiederholen, bis jede Distanz ins Fenster geht."],
+  ["c4","x_range","Driver: eine Flugkurve ins „Fairway“","Auf der Range ein Fairway zwischen zwei Zielen festlegen.\nMit dem Driver immer nur eine Flugkurve spielen, z. B. nur Draw, und zählen, wie viele im Fairway landen."],
+  ["c5","x_short","Chip-Carry-Leiter","Landepunkte in Abständen von etwa 4,5 / 6,5 / 8 / 10 / 12 / 14 m markieren.\nNur auf die Carry-Länge achten: jeden Landepunkt nacheinander treffen, dann wieder zurück."]
+];
+const APEX_SK=[{"t": "pen", "c": "#ffffff", "w": 2, "p": [[40, 40], [780, 40]]}, {"t": "pen", "c": "#e2b23c", "w": 4, "p": [[430, 492], [190, 58]]}, {"t": "pen", "c": "#2f6fd0", "w": 4, "p": [[430, 492], [297.6, 40]]}, {"t": "pen", "c": "#e2b23c", "w": 4, "p": [[430, 492], [428.7, 40]]}, {"t": "sym", "k": "ball", "x": 429.7, "y": 470.7, "z": 0.65}, {"t": "sym", "k": "ball", "x": 428.8, "y": 449.9, "z": 0.65}, {"t": "sym", "k": "ball", "x": 427.3, "y": 429.0, "z": 0.65}, {"t": "sym", "k": "ball", "x": 425.2, "y": 407.8, "z": 0.65}, {"t": "sym", "k": "ball", "x": 422.6, "y": 387.6, "z": 0.65}, {"t": "sym", "k": "ball", "x": 419.4, "y": 366.3, "z": 0.65}, {"t": "sym", "k": "ball", "x": 415.8, "y": 346.1, "z": 0.65}, {"t": "sym", "k": "ball", "x": 411.4, "y": 325.0, "z": 0.65}, {"t": "sym", "k": "ball", "x": 406.7, "y": 305.1, "z": 0.65}, {"t": "sym", "k": "ball", "x": 401.2, "y": 284.6, "z": 0.65}, {"t": "sym", "k": "ball", "x": 395.0, "y": 264.4, "z": 0.65}, {"t": "sym", "k": "ball", "x": 388.3, "y": 244.7, "z": 0.65}, {"t": "sym", "k": "ball", "x": 381.0, "y": 225.5, "z": 0.65}, {"t": "sym", "k": "ball", "x": 372.8, "y": 206.0, "z": 0.65}, {"t": "sym", "k": "ball", "x": 363.8, "y": 187.4, "z": 0.65}, {"t": "sym", "k": "ball", "x": 353.8, "y": 168.8, "z": 0.65}, {"t": "sym", "k": "ball", "x": 343.1, "y": 151.3, "z": 0.65}, {"t": "sym", "k": "ball", "x": 331.2, "y": 134.2, "z": 0.65}, {"t": "sym", "k": "ball", "x": 317.9, "y": 118.0, "z": 0.65}, {"t": "sym", "k": "ball", "x": 303.3, "y": 102.8, "z": 0.65}, {"t": "sym", "k": "ball", "x": 287.1, "y": 89.1, "z": 0.65}, {"t": "sym", "k": "ball", "x": 269.9, "y": 77.7, "z": 0.65}, {"t": "sym", "k": "ball", "x": 251.1, "y": 68.4, "z": 0.65}, {"t": "sym", "k": "ball", "x": 231.3, "y": 61.9, "z": 0.65}, {"t": "sym", "k": "ball", "x": 210.3, "y": 58.4, "z": 0.65}, {"t": "pen", "c": "#2f6fd0", "w": 20, "p": [[321.7, 122.4]]}, {"t": "pen", "c": "#d2442c", "w": 22, "p": [[357.0, 174.3]]}, {"t": "pen", "c": "#e2b23c", "w": 9, "p": [[357.0, 174.3]]}, {"t": "sym", "k": "hole", "x": 190, "y": 58, "z": 1.3}, {"t": "sym", "k": "ball", "x": 430, "y": 492, "z": 1}, {"t": "text", "x": 377.0, "y": 180.3, "s": "Apex \u2248 60 % der Kurve", "c": "#d2442c", "z": 0.6}, {"t": "text", "x": 341.7, "y": 126.4, "s": "Plunge Point", "c": "#2f6fd0", "z": 0.6}, {"t": "text", "x": 368.7, "y": 22, "s": "echte Startlinie", "c": "#16201a", "z": 0.55}, {"t": "text", "x": 207.6, "y": 22, "s": "zu wenig gelesen", "c": "#2f6fd0", "z": 0.55}, {"t": "text", "x": 150, "y": 300, "s": "direkte Linie", "c": "#16201a", "z": 0.55}, {"t": "text", "x": 160, "y": 92, "s": "Loch", "c": "#16201a", "z": 0.55}];
+function addNotes5(j){
+  j.added=j.added||[]; if(j.added.includes("notes5")) return false;
+  const c=j.cards.find(x=>x.id==="a1"); if(c){c.photos=c.photos||[]; if(!c.photos.some(p=>p.id==="sk_apex")) c.photos.unshift({k:"s",id:"sk_apex",sk:APEX_SK})}
+  j.added.push("notes5"); return true;
+}
+function addNotes(j){
+  j.added=j.added||[]; if(j.added.includes("notes1")) return false;
+  NOTES1.forEach(([id,sec,title,text])=>{if(!j.cards.some(c=>c.id===id)) j.cards.push({id,sec,title,text,dia:"",photos:[],active:false,arch:false})});
+  j.added.push("notes1"); return true;
+}
+function addNotes3(j){
+  j.added=j.added||[]; if(j.added.includes("notes3")) return false;
+  NOTES3.forEach(([id,sec,title,text])=>{if(!j.cards.some(c=>c.id===id)) j.cards.push({id,sec,title,text,dia:"",photos:[],active:false,arch:false})});
+  j.added.push("notes3"); return true;
+}
+function addNotes4(j){
+  j.added=j.added||[]; if(j.added.includes("notes4")) return false;
+  NOTES4.forEach(([id,sec,title,text])=>{if(!j.cards.some(c=>c.id===id)) j.cards.push({id,sec,title,text,dia:"",photos:[],active:false,arch:false})});
+  j.added.push("notes4"); return true;
+}
+function addNotes2(j){
+  j.added=j.added||[]; if(j.added.includes("notes2")) return false;
+  NOTES2.forEach(([id,sec,title,text])=>{if(!j.cards.some(c=>c.id===id)) j.cards.push({id,sec,title,text,dia:"",photos:[],active:false,arch:false})});
+  j.added.push("notes2"); return true;
+}
+
+/* ---------- Speicher ---------- */
+let J=lsGet("pt.journal");
+if(!J||!Array.isArray(J.cards)) J={cards:seed()};
+if(addNotes(J)|addNotes2(J)|addNotes3(J)|addNotes4(J)|addNotes5(J)) lsSet("pt.journal",{cards:J.cards,added:J.added});
+const journalDoc=()=>({cards:J.cards,added:J.added||[]});
+let ref=null,busy=false,again=false,last="",dirty=false,tSave=null;
+function save(){lsSet("pt.journal",journalDoc());dirty=true;clearTimeout(tSave);tSave=setTimeout(flush,600)}
+async function flush(){
+  if(!ref){dirty=false;return}
+  if(busy){again=true;return}
+  const d=journalDoc(),j=JSON.stringify(d); if(j===last){dirty=false;return}
+  busy=true;last=j; try{await ref.set(d)}catch(e){} busy=false;
+  if(again){again=false;flush()}else dirty=false;
+}
+const local0=lsGet("pt.journal");
+(async()=>{try{
+  if(!window.claude||!window.claude.use)return;
+  const [db,u]=await Promise.all([window.claude.use("db"),window.claude.use("user")]);
+  if(!db||!u)return; const id=await u.id(); if(!id)return;
+  ref=db.doc("data/users/"+id+"/journal");
+  ref.onSnapshot(s=>{
+    if(dirty||busy)return;
+    if(s.exists&&!s.metadata.hasPendingWrites){const d=s.data();const j=JSON.stringify(d);if(j!==last&&Array.isArray(d.cards)){last=j;J={cards:d.cards.map(c=>({...c})),added:[...(d.added||[])]};const ch=addNotes(J)|addNotes2(J)|addNotes3(J)|addNotes4(J)|addNotes5(J);lsSet("pt.journal",journalDoc());renderAll();if(ch){dirty=true;flush()}}}
+    else if(!s.exists&&!s.metadata.fromCache){last="";dirty=true;flush()}
+  },()=>{});
+}catch(e){}})();
+
+/* ---------- Fotos: im Konto (Claude) oder auf dem Gerät (IndexedDB) ---------- */
+let assetsNS=null, assetsTried=false;
+async function assets(){if(assetsTried)return assetsNS;assetsTried=true;try{if(window.claude&&window.claude.use)assetsNS=await window.claude.use("assets")}catch(e){}return assetsNS}
+function idb(){return new Promise((res,rej)=>{const r=indexedDB.open("pt-photos",1);r.onupgradeneeded=()=>r.result.createObjectStore("p");r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+async function idbOp(mode,fn){const d=await idb();return new Promise((res,rej)=>{const t=d.transaction("p",mode);const st=t.objectStore("p");const r=fn(st);t.oncomplete=()=>res(r&&r.result);t.onerror=()=>rej(t.error)})}
+const urlCache={};
+async function photoUrl(p){
+  if(p.k==="a") return p.url;
+  if(p.k==="s"){ if(!urlCache[p.id]){const c=document.createElement("canvas");c.width=SK_W;c.height=SK_H;const x=c.getContext("2d");x.fillStyle="#cfe3c4";x.fillRect(0,0,SK_W,SK_H);(p.sk||[]).forEach(it=>drawItem(x,it));urlCache[p.id]=c.toDataURL("image/png")} return urlCache[p.id]; }
+  if(urlCache[p.id]) return urlCache[p.id];
+  try{const b=await idbOp("readonly",st=>st.get(p.id)); if(b){urlCache[p.id]=URL.createObjectURL(b);return urlCache[p.id]}}catch(e){}
+  return "";
+}
+async function shrink(file){
+  const img=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=URL.createObjectURL(file)});
+  const m=1600, sc=Math.min(1,m/Math.max(img.width,img.height));
+  const c=document.createElement("canvas");c.width=Math.round(img.width*sc);c.height=Math.round(img.height*sc);
+  c.getContext("2d").drawImage(img,0,0,c.width,c.height); URL.revokeObjectURL(img.src);
+  return await new Promise(r=>c.toBlob(r,"image/jpeg",0.82));
+}
+async function storePhoto(file){
+  const blob=await shrink(file);
+  const a=await assets();
+  if(a){try{const r=await a.upload(blob);return {k:"a",id:r.id,url:r.url}}catch(e){}}
+  const id="p"+nid(); await idbOp("readwrite",st=>st.put(blob,id)); return {k:"i",id};
+}
+async function removePhoto(p){
+  try{if(p.k==="a"){const a=await assets();if(a)await a.delete(p.id)}else await idbOp("readwrite",st=>st.delete(p.id))}catch(e){}
+}
+// Für die Sicherung in der iPhone-Version
+window.PT.photoBackup=async()=>{const out={};for(const c of J.cards)for(const p of c.photos||[])if(p.k==="i"){try{const b=await idbOp("readonly",st=>st.get(p.id));if(b)out[p.id]=await new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result);f.readAsDataURL(b)})}catch(e){}}return out};
+window.PT.photoRestore=async m=>{for(const id in m){try{const b=await (await fetch(m[id])).blob();await idbOp("readwrite",st=>st.put(b,id))}catch(e){}}};
+
+/* ---------- Ansicht ---------- */
+const sel={swing:"putt",strat:"decade",train:"x_plan"}; let showArch=false;
+try{const v=JSON.parse(localStorage.getItem("pt.jsel")||"null");if(v){sel.swing=v.swing||sel.swing;sel.strat=v.strat||sel.strat;sel.train=v.train||sel.train}}catch(e){}
+const star=`<svg viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg>`;
+const pen=`<svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/></svg>`;
+function chips(el,list,cur,kind){
+  el.innerHTML=list.map(([k,n])=>{const cnt=J.cards.filter(c=>c.sec===k&&c.active&&!c.arch).length;return `<button data-k="${k}" aria-pressed="${k===cur}">${esc(n)}${cnt?` ★${cnt}`:""}</button>`}).join("");
+  el.querySelectorAll("button").forEach(b=>b.onclick=()=>{sel[kind]=b.dataset.k;try{localStorage.setItem("pt.jsel",JSON.stringify(sel))}catch(e){}renderAll()});
+}
+function cardHtml(c){
+  const decade=c.sec==="decade", m=decade&&/^([A-Z])\s*[–-]\s*(.*)$/.exec(c.title||"");
+  return `<article class="jcard${c.active?" active":""}${c.arch?" arch":""}" data-id="${c.id}">
+    <div class="jhead">${m?`<span class="step">${esc(m[1])}</span>`:""}<h3>${esc(m?m[2]:c.title||"Ohne Titel")}</h3>
+      <button class="jbtn${c.active?" on":""}" data-act="star" aria-label="${c.active?"Nicht mehr aktiv":"Als aktiv markieren"}" aria-pressed="${c.active}">${star}</button>
+      <button class="jbtn" data-act="edit" aria-label="Bearbeiten">${pen}</button></div>
+    <div class="jtext${c.text?"":" empty"}">${c.text?esc(c.text):(decade?"Deine Regel für diesen Schritt …":"Noch kein Text")}</div>
+    ${(c.photos||[]).length?`<div class="jphotos">${c.photos.map((p,i)=>`<img data-p="${i}" alt="Eigenes Foto ${i+1}">`).join("")}</div>`:""}
+  </article>`;
+}
+function renderList(el,sec,label){
+  let cards=J.cards.filter(c=>c.sec===sec&&(showArch||!c.arch));
+  if(sec!=="decade") cards=cards.slice().sort((a,b)=>(b.active-a.active)||(a.arch-b.arch));
+  const archCount=J.cards.filter(c=>c.sec===sec&&c.arch).length;
+  let h=INTRO[sec]?`<p class="jintro">${esc(INTRO[sec])}</p>`:"";
+  h+=cards.length?cards.map(cardHtml).join(""):`<div class="empty">Noch nichts zu ${esc(label)}. Leg deinen ersten Gedanken an.</div>`;
+  h+=`<button class="jadd" data-act="new">+ Neuer Eintrag: ${esc(label)}</button>`;
+  if(archCount) h+=`<div class="jfoot"><button class="btn ghost" data-act="arch">${showArch?"Archiv ausblenden":`Archiv zeigen (${archCount})`}</button></div>`;
+  el.innerHTML=h;
+  el.querySelectorAll(".jcard").forEach(card=>{
+    const c=J.cards.find(x=>x.id===card.dataset.id);
+    card.querySelector('[data-act="star"]').onclick=()=>{c.active=!c.active;save();renderAll()};
+    card.querySelector('[data-act="edit"]').onclick=()=>editCard(c);
+    card.querySelectorAll("img[data-p]").forEach(async img=>{const p=c.photos[+img.dataset.p];img.src=await photoUrl(p);img.onclick=()=>zoom(img.src)});
+  });
+  el.querySelector('[data-act="new"]').onclick=()=>editCard({id:nid(),sec,title:"",text:"",dia:"",photos:[],active:false,arch:false},true);
+  const ab=el.querySelector('[data-act="arch"]'); if(ab) ab.onclick=()=>{showArch=!showArch;renderAll()};
+}
+function zoom(src){if(!src)return;const d=document.createElement("div");d.className="jzoom";d.innerHTML=`<img alt="Foto groß">`;d.firstChild.src=src;d.onclick=()=>d.remove();document.body.appendChild(d)}
+function renderAll(){
+  chips($("#jsChips"),SWING,sel.swing,"swing"); chips($("#jtChips"),STRAT,sel.strat,"strat"); chips($("#jxChips"),TRAIN,sel.train,"train");
+  renderList($("#jsList"),sel.swing,SWING.find(x=>x[0]===sel.swing)[1]);
+  renderList($("#jtList"),sel.strat,STRAT.find(x=>x[0]===sel.strat)[1]);
+  renderList($("#jxList"),sel.train,TRAIN.find(x=>x[0]===sel.train)[1]);
+}
+
+/* ---------- Bearbeiten ---------- */
+function editCard(c,isNew){
+  const draft={...c,photos:[...(c.photos||[])]}; const removed=[];
+  const host=openSheet(`<h3>${isNew?"Neuer Eintrag":"Eintrag bearbeiten"}</h3>
+    <div class="jform">
+      <input type="text" id="jTitle" placeholder="Titel, z. B. „Tempo vor Linie“" aria-label="Titel">
+      <textarea id="jText" placeholder="Dein Gedanke oder deine Regel. Jede Zeile ein Punkt." aria-label="Text"></textarea>
+      <div><div class="ctl-label" style="margin-bottom:6px">Bilder &amp; Skizzen</div><div class="jthumbs" id="jThumbs"></div>
+        <div class="save-line" style="margin-top:8px"><button class="btn" id="jAddPh">Foto hinzufügen</button><button class="btn" id="jSketch">Skizze zeichnen</button></div>
+        <input type="file" id="jFile" accept="image/*" multiple hidden></div>
+      <label class="jcheck"><input type="checkbox" id="jActive"> Aktiver Gedanke (★)</label>
+      <div class="save-line"><button class="btn primary" id="jSave">Speichern</button><button class="btn" id="jCancel">Abbrechen</button></div>
+      ${isNew?"":`<div class="save-line"><button class="btn" id="jArch">${c.arch?"Wiederherstellen":"Archivieren"}</button><button class="btn danger" id="jDel">Löschen</button></div>`}
+    </div>`);
+  const q=s=>host.querySelector(s);
+  q("#jTitle").value=draft.title; q("#jText").value=draft.text; q("#jActive").checked=draft.active;
+  async function drawThumbs(){
+    const t=q("#jThumbs"); t.innerHTML=draft.photos.map((p,i)=>`<div class="jthumb"><img data-i="${i}" alt="${p.sk?"Skizze":"Foto"} ${i+1}"><button data-x="${i}" aria-label="Entfernen">×</button>${p.sk?`<button class="jedit" data-e="${i}">Bearbeiten</button>`:""}</div>`).join("");
+    t.querySelectorAll("[data-e]").forEach(b=>b.onclick=()=>{const i=+b.dataset.e, old=draft.photos[i];
+      openSketch(async(bl,its)=>{try{const np=await storePhoto(bl);np.sk=its;draft.photos[i]=np;removed.push(old);drawThumbs()}catch(e){toast("Skizze konnte nicht gespeichert werden.")}},old.sk)});
+    t.querySelectorAll("img").forEach(async img=>img.src=await photoUrl(draft.photos[+img.dataset.i]));
+    t.querySelectorAll("[data-x]").forEach(b=>b.onclick=()=>{removed.push(draft.photos.splice(+b.dataset.x,1)[0]);drawThumbs()});
+  }
+  drawThumbs();
+  q("#jSketch").onclick=()=>openSketch(async(bl,its)=>{try{const np=await storePhoto(bl);np.sk=its;draft.photos.push(np);drawThumbs()}catch(e){toast("Skizze konnte nicht gespeichert werden.")}});
+  q("#jAddPh").onclick=()=>q("#jFile").click();
+  q("#jFile").onchange=async e=>{
+    const files=[...e.target.files]; if(!files.length)return; const b=q("#jAddPh"); b.disabled=true; b.textContent="Foto wird gespeichert …";
+    for(const f of files){try{draft.photos.push(await storePhoto(f))}catch(err){toast("Foto konnte nicht gespeichert werden.")}}
+    b.disabled=false; b.textContent="Foto hinzufügen"; e.target.value=""; drawThumbs();
+  };
+  q("#jSave").onclick=()=>{
+    draft.title=q("#jTitle").value.trim(); draft.text=q("#jText").value.replace(/\s+$/,""); draft.active=q("#jActive").checked;
+    if(!draft.title&&!draft.text&&!draft.photos.length){toast("Bitte Titel oder Text eintragen.");return}
+    const i=J.cards.findIndex(x=>x.id===draft.id); if(i>=0)J.cards[i]=draft; else J.cards.push(draft);
+    removed.forEach(removePhoto); save(); closeSheet(); renderAll(); toast("Gespeichert");
+  };
+  q("#jCancel").onclick=()=>{
+    // neu hochgeladene, nicht gespeicherte Fotos wieder entfernen
+    draft.photos.filter(p=>!(c.photos||[]).some(o=>o.id===p.id)).forEach(removePhoto); closeSheet();
+  };
+  if(!isNew){
+    q("#jArch").onclick=()=>{c.arch=!c.arch;if(c.arch)c.active=false;save();closeSheet();renderAll();toast(c.arch?"Archiviert":"Wiederhergestellt")};
+    let armed=false; q("#jDel").onclick=()=>{
+      if(!armed){armed=true;q("#jDel").textContent="Wirklich löschen? Nochmal tippen";return}
+      (c.photos||[]).forEach(removePhoto); J.cards=J.cards.filter(x=>x.id!==c.id); save(); closeSheet(); renderAll(); toast("Gelöscht");
+    };
+  }
+}
+renderAll();
 })();
 </script>
 <script>
