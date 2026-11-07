@@ -1,5 +1,5 @@
 // Offline-Speicher: App-Dateien beim ersten Öffnen ablegen, danach auch ohne Netz starten.
-const CACHE="putting-tempo-v10";
+const CACHE="putting-tempo-v17";
 const FILES=["./","index.html","manifest.webmanifest","icons/icon-180.png","icons/icon-192.png","icons/icon-512.png","lib/jspdf.umd.min.js","lib/jspdf.plugin.autotable.min.js"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting()))});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});

@@ -198,6 +198,7 @@ nav.tabs{grid-template-columns:none;grid-auto-columns:1fr;grid-auto-flow:column}
 .grip-svg .tick{stroke:var(--muted);stroke-width:1}
 .grip-svg .tl{fill:var(--muted);font:600 9px var(--f-body)}
 .grip-svg .hand{fill:var(--accent);opacity:.28}
+.grip-svg .hand-r{opacity:.18}
 .grip-svg .edge{stroke:var(--accent);stroke-width:3}
 .grip-svg .knob{fill:var(--accent)}
 .grip-svg .kt{fill:var(--accent-ink);font:700 11px var(--f-display);text-anchor:middle}
@@ -238,6 +239,10 @@ nav.tabs{grid-template-columns:none;grid-auto-columns:1fr;grid-auto-flow:column}
 .wtable td:first-child{text-align:left;padding:8px 12px;color:var(--muted);font-weight:600;white-space:nowrap}
 .wtable td button{width:100%;border:0;background:transparent;padding:9px 2px;font-family:var(--f-display);font-size:1.05rem;color:var(--muted)}
 .wtable td button.meas{color:var(--fg);font-weight:700}
+.wtable tr.keyg td{background:color-mix(in srgb,var(--flag) 16%,var(--surface));border-top:2px solid var(--flag)}
+.wtable tr.keyg td:first-child{color:var(--fg);font-weight:700}
+.wtable tr.keyg td button{color:var(--fg)}
+.wtable .kg{display:block;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--flag);line-height:1.1}
 .wtable tr.cur td{background:var(--accent-soft)}
 .wtable td button.sel{outline:2px solid var(--accent);outline-offset:-3px;border-radius:8px;color:var(--fg)}
 .wtable td button.best{background:var(--flag);color:#1a1405;border-radius:8px}
@@ -255,7 +260,20 @@ nav.tabs{grid-template-columns:none;grid-auto-columns:1fr;grid-auto-flow:column}
 .jchips::-webkit-scrollbar{display:none}
 .jchips button{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 12px;font-weight:600;font-size:.9rem;color:var(--muted)}
 .jchips button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
-.jlist{display:flex;flex-direction:column;gap:12px}
+.jlist{display:flex;flex-direction:column;gap:22px}
+.jsec{display:flex;flex-direction:column;gap:12px}
+.jsech{margin:0;font-family:var(--f-display);font-size:1.3rem;font-weight:700;padding-bottom:4px;border-bottom:2px solid var(--accent)}
+.jadd-s{padding:9px;font-size:.92rem}
+.jhit{display:flex;flex-direction:column;gap:4px}
+.jwhere{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+#jQ{flex:1;min-width:0;border:1px solid var(--line);border-radius:12px;padding:11px 12px;background:var(--surface);font-size:1rem}
+.secl{display:flex;flex-direction:column;gap:6px}
+.secr{display:flex;align-items:center;gap:4px}
+.secr input{flex:1;min-width:0;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--surface)}
+.secn{min-width:22px;text-align:center;color:var(--muted);font-size:.8rem;font-variant-numeric:tabular-nums}
+.secr .jbtn{border:1px solid var(--line);font-weight:700;color:var(--fg)}
+.secr .jbtn:disabled{opacity:.3}
+.secr .secdel{color:var(--warn)}
 .jintro{color:var(--muted);font-size:.9rem;margin:0;max-width:62ch}
 .jcard{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);overflow:hidden}
 .jcard.active{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
@@ -307,6 +325,9 @@ nav.tabs{grid-template-columns:none;grid-auto-columns:1fr;grid-auto-flow:column}
 
 <div class="app">
   <header class="top">
+    <button class="iconbtn" id="btnSearch" aria-label="Journal durchsuchen" hidden>
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+    </button>
     <button class="iconbtn" id="btnSettings" aria-label="Einstellungen">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
     </button>
@@ -403,7 +424,7 @@ nav.tabs{grid-template-columns:none;grid-auto-columns:1fr;grid-auto-flow:column}
         <div class="sugg" id="sugg"></div>
       </div>
       <div class="grip-panel">
-        <svg class="grip-svg" id="gripSvg" viewBox="0 0 120 410" role="slider" tabindex="0" aria-label="Unterkante linke Hand in Zentimetern ab dem unteren Griffende" aria-valuemin="-3" aria-valuemax="18"></svg>
+        <svg class="grip-svg" id="gripSvg" viewBox="0 0 120 440" role="slider" tabindex="0" aria-label="Oberkante linke Hand in Zentimetern ab dem unteren Griffende" aria-valuemin="15" aria-valuemax="27"></svg>
         <div class="pside">
           <div class="clock-row">
             <svg class="dial" id="dial" viewBox="0 0 120 120" role="slider" tabindex="0" aria-label="Ausholposition – Schläger ziehen" style="touch-action:none;cursor:grab"></svg>
@@ -428,9 +449,13 @@ nav.tabs{grid-template-columns:none;grid-auto-columns:1fr;grid-auto-flow:column}
     </section>
 
     <!-- JOURNAL -->
-    <section class="view" id="v-jswing" hidden><div class="jchips" id="jsChips" role="group" aria-label="Schlagart"></div><div id="jsList" class="jlist"></div></section>
-    <section class="view" id="v-jtrain" hidden><div class="jchips" id="jxChips" role="group" aria-label="Übungsbereich"></div><div id="jxList" class="jlist"></div></section>
-    <section class="view" id="v-jstrat" hidden><div class="jchips" id="jtChips" role="group" aria-label="Bereich"></div><div id="jtList" class="jlist"></div></section>
+    <section class="view" id="v-jsearch" hidden>
+      <div class="target"><input type="search" id="jQ" placeholder="Suchen, z. B. Tempo" aria-label="Journal durchsuchen" autocomplete="off"></div>
+      <div id="jRes" class="jlist"></div>
+    </section>
+    <section class="view" id="v-jswing" hidden><div id="jsList" class="jlist"></div></section>
+    <section class="view" id="v-jtrain" hidden><div id="jxList" class="jlist"></div></section>
+    <section class="view" id="v-jstrat" hidden><div id="jtList" class="jlist"></div></section>
 
     <!-- WEDGE-TEST -->
     <section class="view" id="v-ptest" hidden>
@@ -904,7 +929,7 @@ $("#tabRound").onclick=()=>showSub("round");
 $("#tabResults").onclick=()=>showSub("results");
 
 /* ---------- Tabs ---------- */
-const TITLES={chart:"Distanztabelle",metro:"Putt-Metronom",test:"Putt-Testrunde",pchart:"Wedge-Tabelle",ptest:"Wedge-Testrunde",jswing:"Schwunggedanken",jstrat:"Strategie",jtrain:"Übungen"};
+const TITLES={chart:"Distanztabelle",metro:"Putt-Metronom",test:"Putt-Testrunde",pchart:"Wedge-Tabelle",ptest:"Wedge-Testrunde",jswing:"Schwunggedanken",jstrat:"Strategie",jtrain:"Übungen",jsearch:"Journal-Suche"};
 const MODES={putt:["chart","metro","test"],pitch:["pchart","ptest"],journal:["jswing","jtrain","jstrat"]};
 function showView(v){
   document.querySelectorAll("nav.tabs button").forEach(x=>x.setAttribute("aria-selected",x.dataset.v===v));
@@ -917,6 +942,7 @@ function setMode(m,view){
   $("#mPutt").setAttribute("aria-pressed",m==="putt"); $("#mPitch").setAttribute("aria-pressed",m==="pitch"); $("#mJournal").setAttribute("aria-pressed",m==="journal");
   document.querySelectorAll("nav.tabs button").forEach(x=>x.hidden=!MODES[m].includes(x.dataset.v));
   showView(view&&MODES[m].includes(view)?view:MODES[m][0]);
+  $("#btnSettings").hidden=m==="journal"; $("#btnSearch").hidden=m!=="journal";
 }
 document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.v)));
 $("#mPutt").addEventListener("click",()=>setMode("putt"));
@@ -928,7 +954,7 @@ syncControls(); render(); renderRound(); renderResults();
 initStore();
 // Für Tests im Terminal
 window.__pt={playsLike,backstroke,tourPutts,DEFAULT_BASE};
-window.PT={toast,openSheet,closeSheet,lsGet,lsSet,fmt,tourPutts,units:()=>({steps:S.unit==="steps",stepCm:S.stepCm}),setUnit};
+window.PT={toast,openSheet,closeSheet,lsGet,lsSet,fmt,tourPutts,units:()=>({steps:S.unit==="steps",stepCm:S.stepCm}),setUnit,showView};
 
 /* ---------- Dateien speichern (Teilen-Menü auf dem iPhone, sonst Download) ---------- */
 async function saveFile(name,blob,type){
@@ -965,12 +991,13 @@ async function exportPdf(btn){
     const w=window.PT.wedgeExport&&window.PT.wedgeExport();
     if(w){
       w.positions.forEach((p,idx)=>{
-        if(idx%2===0){doc.addPage();head("Wedge-Tabelle",`Carry in ${w.steps?"Schritten (1 Schritt = "+S.stepCm+" cm)":"Metern"} · Griff = Unterkante linke Hand ab unterem Griffende, -3 = auf dem Schaft · fett = gemessen, grau = berechnet · Stand ${today}`)}
+        if(idx%2===0){doc.addPage();head("Wedge-Tabelle",`Carry in ${w.steps?"Schritten (1 Schritt = "+S.stepCm+" cm)":"Metern"} · Griff: Oben = Hand ganz oben, Mitte, Unten · fett = gemessen, grau = berechnet · Stand ${today}`)}
         const y=idx%2===0?33:doc.lastAutoTable.finalY+10;
         doc.setFont("helvetica","bold");doc.setFontSize(12);doc.text("Ausholen: "+p.label,14,y);
         doc.autoTable({...tbl,startY:y+3,styles:{...tbl.styles,fontSize:9,cellPadding:0.9},head:[["Griff",...w.wedges.map(x=>x+"°")]],
           body:p.rows.map(r=>[r.lab,...r.v.map(v=>v==null?"":pdfNum(v))]),
-          didParseCell:d=>{if(d.section==="body"&&d.column.index>0){const m=p.rows[d.row.index].m[d.column.index-1];d.cell.styles.fontStyle=m?"bold":"normal";if(!m)d.cell.styles.textColor=[110,110,110]}}});
+          didParseCell:d=>{if(d.section==="body"&&/^(Oben|Mitte|Unten)/.test(p.rows[d.row.index].lab)){d.cell.styles.fillColor=[250,238,205]}
+          if(d.section==="body"&&d.column.index>0){const m=p.rows[d.row.index].m[d.column.index-1];d.cell.styles.fontStyle=m?"bold":"normal";if(!m)d.cell.styles.textColor=[110,110,110]}}});
       });
     }
     const blob=doc.output("blob");
@@ -994,18 +1021,19 @@ const CLOCKS=["7:00","7:30","8:00","8:30","9:00","10:00","11:00"];
 const CLOCK_H={"7:00":7,"7:30":7.5,"8:00":8,"8:30":8.5,"9:00":9,"10:00":10,"11:00":11};
 const CLOCK_N={"7:00":"Knie","7:30":"Oberschenkel","8:00":"Hüfte","8:30":"Bauch","9:00":"Brust","10:00":"Schulter","11:00":"Voll"};
 const cLabel=c=>(CLOCK_N[c]||"")+" · "+c;
-// Griffposition = Abstand vom unteren Griffende bis zur Unterkante der linken Hand, in 3-cm-Schritten.
+// Griffposition = Abstand vom unteren Griffende bis zur Oberkante der linken Hand, in 3-cm-Schritten.
 // 18 = Hand ganz oben, 0 = Hand ganz unten am Griff, −3 = Hand greift aufs Eisen.
 // 18 cm = Hand ganz oben, 0 cm = Hand ganz unten am Griff, negativ = auf dem Schaft.
-const GRIP_LEN=27, HAND=9, GTOP=GRIP_LEN-HAND, GMIN=-3, GSTEP=3;
-const GRIPS=Array.from({length:(GTOP-GMIN)/GSTEP+1},(_,i)=>GTOP-i*GSTEP);
-const snapG=g=>Math.max(GMIN,Math.min(GTOP,Math.round(g/GSTEP)*GSTEP));
-const gLabel=g=>g===GTOP?g+" cm (oben)":(g<0?"−"+(-g):g)+" cm";
+const GRIP_LEN=27, HAND=9, GTOP=GRIP_LEN, GMIN=15, GSTEP=6;
+const GRIPS=[27,21,15]; // Oben, Mitte, Unten (Oberkante linke Hand ab unterem Griffende)
+const snapG=g=>GRIPS.reduce((a,b)=>Math.abs(b-g)<Math.abs(a-g)?b:a);
+const gLabel=g=>({27:"Oben",21:"Mitte",15:"Unten"})[g]||(g+" cm");
+const KEYG={27:"Oben",21:"Mitte",15:"Unten"}; // die drei Hauptpositionen
 // Startwerte: Carry in m bei 9 Uhr, volle Grifflänge. Jede Uhrzeit und jeder cm tiefer greifen skaliert das.
 const BASE9={60:35,56:42,52:50,48:57,44:64};
 const CLOCK_F={"7:00":0.38,"7:30":0.5,"8:00":0.65,"8:30":0.8,"9:00":1,"10:00":1.2,"10:30":1.3,"11:00":1.38};
 function startVal(c,w,g){return Math.round(BASE9[w]*(CLOCK_F[c]||1)*(1-0.025*(GTOP-g))*2)/2}
-const P={custom:{},clock:"9:00",grip:18,wedge:56,unit:"m",rounds:[]};
+const P={custom:{},clock:"9:00",grip:27,wedge:56,unit:"m",rounds:[]};
 let pEditing=null, pRound=null, target=null;
 const key=(c,w,g)=>c+"|"+w+"|"+g;
 // Wert einer Zelle: deine Messung, sonst aus mind. 2 Messungen desselben Wedges (gleiche Ausholposition) entlang des Griffs berechnet, sonst null.
@@ -1031,8 +1059,8 @@ const c0=lsGet("pt.pitch"); if(c0) applyPitch(c0);
 const r0=lsGet("pt.pitchRounds"); if(r0&&Array.isArray(r0.list)) P.rounds=r0.list;
 pRound=lsGet("pt.pround");
 function applyPitch(d){
-  if(d.gv!==4){ // ältere Zählweisen auf "Unterkante ab unten" umrechnen und aufs 3-cm-Raster legen
-    const conv=g=>d.gv===3?g-HAND:d.gv===2?g:GTOP-g; // gv3: Oberkante ab unten, gv2: Unterkante ab unten, gv1: Oberkante ab oben
+  if(d.gv!==5){ // ältere Zählweisen auf "Oberkante ab unten" umrechnen und aufs 3-cm-Raster legen
+    const conv=g=>d.gv===4||d.gv===2?g+HAND:d.gv===3?g:GRIP_LEN-g; // gv4/gv2: Unterkante ab unten, gv3: Oberkante ab unten, gv1: Oberkante ab oben
     const cu={}; Object.keys(d.custom||{}).forEach(k=>{const [c,w,g]=k.split("|");const ng=snapG(conv(+g));const nk=c+"|"+w+"|"+ng;if(!(nk in cu)||conv(+g)===ng)cu[nk]=d.custom[k]});
     d={...d,custom:cu,grip:typeof d.grip==="number"?snapG(conv(d.grip)):undefined};
   }
@@ -1042,7 +1070,7 @@ function applyPitch(d){
   if(WEDGES.includes(d.wedge)) P.wedge=d.wedge;
   if(d.unit==="m"||d.unit==="steps") P.unit=d.unit;
 }
-const pitchDoc=()=>({gv:4,unit:P.unit,custom:P.custom,clock:P.clock,grip:P.grip,wedge:P.wedge});
+const pitchDoc=()=>({gv:5,unit:P.unit,custom:P.custom,clock:P.clock,grip:P.grip,wedge:P.wedge});
 
 /* ---------- Speicher ---------- */
 function makeDoc(path){
@@ -1070,26 +1098,28 @@ function saveRounds(){P.rounds=P.rounds.slice(0,300);lsSet("pt.pitchRounds",{lis
 })();
 
 /* ---------- Griff ---------- */
-const PX=12, TOP=24;
+const PX=10, TOP=24;
 const svg=$("#gripSvg");
 function drawGrip(){
   const y0=TOP, y1=TOP+GRIP_LEN*PX, cx=74, yAt=k=>y0+(GRIP_LEN-k)*PX;
-  let h=`<rect class="shaft" x="${cx-3}" y="${y1}" width="6" height="${410-y1}"/>`;
+  let h=`<rect class="shaft" x="${cx-3}" y="${y1}" width="6" height="${440-y1}"/>`;
   h+=`<path class="body" d="M${cx-16} ${y0} L${cx+16} ${y0} L${cx+11} ${y1} L${cx-11} ${y1} Z"/>`;
   for(let i=1;i<GRIP_LEN;i+=2){const y=y0+i*PX, w=16-5*i/GRIP_LEN;h+=`<line class="wrap" x1="${cx-w}" y1="${y}" x2="${cx+w}" y2="${y+4}"/>`}
   h+=`<rect class="cap" x="${cx-18}" y="${y0-8}" width="36" height="9" rx="4"/>`;
-  for(let k=GMIN;k<=GRIP_LEN;k++){const y=yAt(k);h+=`<line class="tick" x1="${k%2?36:30}" y1="${y}" x2="44" y2="${y}"/>`;if(k%3===0)h+=`<text class="tl" x="26" y="${y+3}" text-anchor="end">${k<0?"−"+(-k):k}</text>`}
-  h+=`<text class="tl" x="26" y="10" text-anchor="end">cm</text>`;
+  GRIPS.forEach(k=>{const y=yAt(k);h+=`<line class="tick" x1="30" y1="${y}" x2="50" y2="${y}" style="stroke-width:2"/><text class="tl" x="28" y="${y+3}" text-anchor="end">${gLabel(k)}</text>`});
   const gy=yAt(P.grip);
-  h+=`<rect class="hand" x="${cx-24}" y="${gy-HAND*PX}" width="48" height="${HAND*PX}" rx="6"/>`;
+  // linke Hand oben, rechte Hand direkt darunter
+  h+=`<rect class="hand" x="${cx-24}" y="${gy}" width="48" height="${HAND*PX-2}" rx="6"/>`;
+  h+=`<rect class="hand hand-r" x="${cx-24}" y="${gy+HAND*PX}" width="48" height="${HAND*PX-2}" rx="6"/>`;
   h+=`<line class="edge" x1="${cx-26}" y1="${gy}" x2="${cx+26}" y2="${gy}"/>`;
-  h+=`<text class="tl" x="${cx}" y="${gy-HAND*PX/2+3}" text-anchor="middle" style="fill:var(--fg)">links</text>`;
-  h+=`<rect class="knob" x="${cx+14}" y="${gy-11}" width="32" height="22" rx="11"/><text class="kt" x="${cx+30}" y="${gy+4}">${P.grip<0?"−"+(-P.grip):P.grip}</text>`;
-  svg.innerHTML=h; svg.setAttribute("aria-valuenow",P.grip); svg.setAttribute("aria-valuetext",gLabel(P.grip)+" ab unten");
+  h+=`<text class="tl" x="${cx}" y="${gy+HAND*PX/2+3}" text-anchor="middle" style="fill:var(--fg)">links</text>`;
+  h+=`<text class="tl" x="${cx}" y="${gy+HAND*PX*1.5+3}" text-anchor="middle" style="fill:var(--fg)">rechts</text>`;
+  h+=`<rect class="knob" x="${cx+14}" y="${gy-11}" width="32" height="22" rx="11"/><text class="kt" x="${cx+30}" y="${gy+4}">${gLabel(P.grip)[0]}</text>`;
+  svg.innerHTML=h; svg.setAttribute("aria-valuenow",P.grip); svg.setAttribute("aria-valuetext","Griff "+gLabel(P.grip));
 }
 function setGrip(g){g=snapG(g);if(g===P.grip)return;P.grip=g;renderAll();savePitch()}
 let dragging=false;
-function yToGrip(ev){const r=svg.getBoundingClientRect();const y=(ev.clientY-r.top)*(410/r.height);return GRIP_LEN-(y-TOP)/PX}
+function yToGrip(ev){const r=svg.getBoundingClientRect();const y=(ev.clientY-r.top)*(440/r.height);return GRIP_LEN-(y-TOP)/PX}
 svg.addEventListener("pointerdown",e=>{dragging=true;svg.setPointerCapture(e.pointerId);setGrip(yToGrip(e))});
 svg.addEventListener("pointermove",e=>{if(dragging)setGrip(yToGrip(e))});
 svg.addEventListener("pointerup",()=>dragging=false);
@@ -1172,7 +1202,7 @@ function renderTable(){
   t.querySelectorAll("input[data-k]").forEach(i=>i.oninput=()=>{const v=parseFloat(String(i.value).replace(",","."));if(v>0)pEditing[i.dataset.k]=fromU(v);else delete pEditing[i.dataset.k]});
   const st=U().steps; $("#pH").textContent=st?"Carry in Schritten":"Carry in Metern"; $("#tgtUnit").textContent=st?"Schritte":"m";
   $("#puM").setAttribute("aria-pressed",!st); $("#puS").setAttribute("aria-pressed",st);
-  $("#pSub").textContent=`Ausholen bis ${cLabel(c)} · Unterkante linke Hand ab unterem Griffende`;
+  $("#pSub").textContent=`Ausholen bis ${cLabel(c)} · Griff oben, Mitte oder unten`;
   $("#pNote").hidden=!pEditing; $("#pActions").hidden=!pEditing; $("#pEdit").hidden=!!pEditing; $("#pLegend").hidden=!!pEditing;
   if(pEditing) $("#pNote").textContent=`Trag deine gemessenen Carry-Weiten für ${cLabel(c)} in ${U().steps?"Schritten":"Metern"} ein. Sobald ein Wedge zwei Messungen hat, berechnet die App seine übrigen Griffpositionen.`;
 }
@@ -1291,7 +1321,7 @@ $("#ptRound").onclick=()=>showSub("round");
 $("#ptResults").onclick=()=>showSub("results");
 
 function renderAll(){renderSide();renderSugg();renderTable()}
-window.PT.wedgeExport=()=>({steps:U().steps,wedges:WEDGES,positions:CLOCKS.map(c=>({label:cLabel(c),rows:GRIPS.map(g=>({g,lab:gLabel(g).replace("−","-"),v:WEDGES.map(w=>{const v=val(c,w,g);return v==null?null:toU(v)}),m:WEDGES.map(w=>isMeas(c,w,g))}))}))});
+window.PT.wedgeExport=()=>({steps:U().steps,wedges:WEDGES,positions:CLOCKS.map(c=>({label:cLabel(c),rows:GRIPS.map(g=>({g,lab:gLabel(g),v:WEDGES.map(w=>{const v=val(c,w,g);return v==null?null:toU(v)}),m:WEDGES.map(w=>isMeas(c,w,g))}))}))});
 renderAll(); renderRound(); renderResults();
 window.addEventListener("pt:units",()=>{const v=parseFloat(String($("#tgt").value).replace(",","."));target=v>0?fromU(v):null;renderAll();renderRound()});
 function setPUnit(u){if(pEditing||P.unit===u)return;const v=parseFloat(String($("#tgt").value).replace(",","."));P.unit=u;target=v>0?fromU(v):null;renderAll();renderRound();savePitch(true)}
@@ -1572,8 +1602,11 @@ function addNotes2(j){
 /* ---------- Speicher ---------- */
 let J=lsGet("pt.journal");
 if(!J||!Array.isArray(J.cards)) J={cards:seed()};
+const DEF_SECS={swing:SWING,train:TRAIN,strat:STRAT};
+function normSecs(x){const o={};Object.keys(DEF_SECS).forEach(t=>{const v=x&&Array.isArray(x[t])?x[t].filter(a=>Array.isArray(a)&&a.length===2):null;o[t]=(v&&v.length?v:DEF_SECS[t]).map(a=>[a[0],a[1]])});return o}
+J.secs=normSecs(J.secs);
 if(addNotes(J)|addNotes2(J)|addNotes3(J)|addNotes4(J)|addNotes5(J)) lsSet("pt.journal",{cards:J.cards,added:J.added});
-const journalDoc=()=>({cards:J.cards,added:J.added||[]});
+const journalDoc=()=>({cards:J.cards,added:J.added||[],secs:J.secs});
 let ref=null,busy=false,again=false,last="",dirty=false,tSave=null;
 function save(){lsSet("pt.journal",journalDoc());dirty=true;clearTimeout(tSave);tSave=setTimeout(flush,600)}
 async function flush(){
@@ -1591,7 +1624,7 @@ const local0=lsGet("pt.journal");
   ref=db.doc("data/users/"+id+"/journal");
   ref.onSnapshot(s=>{
     if(dirty||busy)return;
-    if(s.exists&&!s.metadata.hasPendingWrites){const d=s.data();const j=JSON.stringify(d);if(j!==last&&Array.isArray(d.cards)){last=j;J={cards:d.cards.map(c=>({...c})),added:[...(d.added||[])]};const ch=addNotes(J)|addNotes2(J)|addNotes3(J)|addNotes4(J)|addNotes5(J);lsSet("pt.journal",journalDoc());renderAll();if(ch){dirty=true;flush()}}}
+    if(s.exists&&!s.metadata.hasPendingWrites){const d=s.data();const j=JSON.stringify(d);if(j!==last&&Array.isArray(d.cards)){last=j;J={cards:d.cards.map(c=>({...c})),added:[...(d.added||[])],secs:normSecs(d.secs)};const ch=addNotes(J)|addNotes2(J)|addNotes3(J)|addNotes4(J)|addNotes5(J);lsSet("pt.journal",journalDoc());renderAll();if(ch){dirty=true;flush()}}}
     else if(!s.exists&&!s.metadata.fromCache){last="";dirty=true;flush()}
   },()=>{});
 }catch(e){}})();
@@ -1648,14 +1681,21 @@ function cardHtml(c){
     ${(c.photos||[]).length?`<div class="jphotos">${c.photos.map((p,i)=>`<img data-p="${i}" alt="Eigenes Foto ${i+1}">`).join("")}</div>`:""}
   </article>`;
 }
-function renderList(el,sec,label){
-  let cards=J.cards.filter(c=>c.sec===sec&&(showArch||!c.arch));
-  if(sec!=="decade") cards=cards.slice().sort((a,b)=>(b.active-a.active)||(a.arch-b.arch));
-  const archCount=J.cards.filter(c=>c.sec===sec&&c.arch).length;
-  let h=INTRO[sec]?`<p class="jintro">${esc(INTRO[sec])}</p>`:"";
-  h+=cards.length?cards.map(cardHtml).join(""):`<div class="empty">Noch nichts zu ${esc(label)}. Leg deinen ersten Gedanken an.</div>`;
-  h+=`<button class="jadd" data-act="new">+ Neuer Eintrag: ${esc(label)}</button>`;
-  if(archCount) h+=`<div class="jfoot"><button class="btn ghost" data-act="arch">${showArch?"Archiv ausblenden":`Archiv zeigen (${archCount})`}</button></div>`;
+function renderTab(el,tab){
+  const list=J.secs[tab];
+  let h="", archTotal=0;
+  list.forEach(([sec,label])=>{
+    let cards=J.cards.filter(c=>c.sec===sec&&(showArch||!c.arch));
+    archTotal+=J.cards.filter(c=>c.sec===sec&&c.arch).length;
+    if(!cards.length) return;
+    if(sec!=="decade") cards=cards.slice().sort((a,b)=>(b.active-a.active)||(a.arch-b.arch));
+    h+=`<section class="jsec"><h2 class="jsech">${esc(label)}</h2>${INTRO[sec]?`<p class="jintro">${esc(INTRO[sec])}</p>`:""}
+      ${cards.map(cardHtml).join("")}<button class="jadd jadd-s" data-new="${sec}">+ ${esc(label)}</button></section>`;
+  });
+  if(!h) h=`<div class="empty">Noch keine Einträge. Leg deinen ersten an.</div>`;
+  h+=`<button class="jadd" data-new="">+ Neuer Eintrag (Abschnitt wählen)</button>`;
+  h+=`<div class="jfoot"><button class="btn" data-act="secs">Abschnitte bearbeiten</button></div>`;
+  if(archTotal) h+=`<div class="jfoot"><button class="btn ghost" data-act="arch">${showArch?"Archiv ausblenden":`Archiv zeigen (${archTotal})`}</button></div>`;
   el.innerHTML=h;
   el.querySelectorAll(".jcard").forEach(card=>{
     const c=J.cards.find(x=>x.id===card.dataset.id);
@@ -1663,15 +1703,72 @@ function renderList(el,sec,label){
     card.querySelector('[data-act="edit"]').onclick=()=>editCard(c);
     card.querySelectorAll("img[data-p]").forEach(async img=>{const p=c.photos[+img.dataset.p];img.src=await photoUrl(p);img.onclick=()=>zoom(img.src)});
   });
-  el.querySelector('[data-act="new"]').onclick=()=>editCard({id:nid(),sec,title:"",text:"",dia:"",photos:[],active:false,arch:false},true);
+  el.querySelectorAll("[data-new]").forEach(b=>b.onclick=()=>editCard({id:nid(),sec:b.dataset.new||J.secs[tab][0][0],title:"",text:"",dia:"",photos:[],active:false,arch:false},true));
   const ab=el.querySelector('[data-act="arch"]'); if(ab) ab.onclick=()=>{showArch=!showArch;renderAll()};
+  el.querySelector('[data-act="secs"]').onclick=()=>editSecs(tab);
 }
-function zoom(src){if(!src)return;const d=document.createElement("div");d.className="jzoom";d.innerHTML=`<img alt="Foto groß">`;d.firstChild.src=src;d.onclick=()=>d.remove();document.body.appendChild(d)}
 function renderAll(){
-  chips($("#jsChips"),SWING,sel.swing,"swing"); chips($("#jtChips"),STRAT,sel.strat,"strat"); chips($("#jxChips"),TRAIN,sel.train,"train");
-  renderList($("#jsList"),sel.swing,SWING.find(x=>x[0]===sel.swing)[1]);
-  renderList($("#jtList"),sel.strat,STRAT.find(x=>x[0]===sel.strat)[1]);
-  renderList($("#jxList"),sel.train,TRAIN.find(x=>x[0]===sel.train)[1]);
+  if(!$("#v-jsearch").hidden) renderSearch();
+  renderTab($("#jsList"),"swing"); renderTab($("#jxList"),"train"); renderTab($("#jtList"),"strat");
+}
+const TAB_NAMES={swing:"Schwung",train:"Übungen",strat:"Strategie"};
+
+/* ---------- Suche über alle Tabs ---------- */
+function secInfo(sec){for(const t in J.secs){const s=J.secs[t].find(a=>a[0]===sec);if(s)return TAB_NAMES[t]+" · "+s[1]}return ""}
+function renderSearch(){
+  const el=$("#jRes"), raw=$("#jQ").value.trim();
+  if(!raw){el.innerHTML=`<p class="jintro">Durchsucht Titel und Text aller Karten in Schwung, Übungen und Strategie.</p>`;return}
+  const norm=t=>String(t||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  const words=norm(raw).split(/\s+/).filter(Boolean);
+  const hits=J.cards.filter(c=>{const t=norm(c.title+" "+c.text+" "+secInfo(c.sec));return words.every(w=>t.includes(w))})
+    .sort((a,b)=>(a.arch-b.arch)||(b.active-a.active));
+  if(!hits.length){el.innerHTML=`<div class="empty">Keine Karte zu „${esc(raw)}“ gefunden.</div>`;return}
+  el.innerHTML=`<p class="jintro">${hits.length} ${hits.length===1?"Treffer":"Treffer"}</p>`+hits.map(c=>`<div class="jhit"><span class="jwhere">${esc(secInfo(c.sec))}${c.arch?" · archiviert":""}</span>${cardHtml(c)}</div>`).join("");
+  el.querySelectorAll(".jcard").forEach(card=>{
+    const c=J.cards.find(x=>x.id===card.dataset.id);
+    card.querySelector('[data-act="star"]').onclick=()=>{c.active=!c.active;save();renderAll()};
+    card.querySelector('[data-act="edit"]').onclick=()=>editCard(c);
+    card.querySelectorAll("img[data-p]").forEach(async img=>{const p=c.photos[+img.dataset.p];img.src=await photoUrl(p);img.onclick=()=>zoom(img.src)});
+  });
+}
+$("#jQ").addEventListener("input",renderSearch);
+$("#btnSearch").addEventListener("click",()=>{window.PT.showView("jsearch");renderSearch();setTimeout(()=>{try{$("#jQ").focus()}catch(e){}},50)});
+
+/* ---------- Abschnitte bearbeiten ---------- */
+function editSecs(tab){
+  let list=J.secs[tab].map(a=>[a[0],a[1]]); const moves={}; // gelöschter Abschnitt -> Ziel
+  const host=openSheet(`<h3>Abschnitte: ${TAB_NAMES[tab]}</h3><p>Namen direkt ändern, mit ↑ ↓ verschieben. Beim Löschen wandern die Einträge in den Abschnitt darüber.</p>
+    <div class="secl" id="secL"></div>
+    <div class="target"><input type="text" id="secNew" placeholder="Neuer Abschnitt, z. B. „Bunker“" maxlength="40" aria-label="Name des neuen Abschnitts"><button class="btn" id="secAdd">Hinzufügen</button></div>
+    <div class="save-line"><button class="btn primary" id="secSave">Speichern</button><button class="btn" id="secCancel">Abbrechen</button></div>`);
+  const q=x=>host.querySelector(x);
+  const count=k=>J.cards.filter(c=>c.sec===k).length+Object.keys(moves).filter(m=>moves[m]===k).reduce((n,m)=>n+J.cards.filter(c=>c.sec===m).length,0);
+  function draw(){
+    q("#secL").innerHTML=list.map(([k,n],i)=>`<div class="secr" data-i="${i}">
+      <input type="text" value="${esc(n)}" maxlength="40" aria-label="Name des Abschnitts">
+      <span class="secn">${count(k)}</span>
+      <button class="jbtn" data-m="-1" aria-label="Nach oben" ${i===0?"disabled":""}>↑</button>
+      <button class="jbtn" data-m="1" aria-label="Nach unten" ${i===list.length-1?"disabled":""}>↓</button>
+      <button class="jbtn secdel" data-d aria-label="Löschen" ${list.length<2?"disabled":""}>✕</button></div>`).join("");
+    q("#secL").querySelectorAll(".secr").forEach(r=>{
+      const i=+r.dataset.i;
+      r.querySelector("input").oninput=e=>{list[i][1]=e.target.value};
+      r.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{const j=i+ +b.dataset.m;[list[i],list[j]]=[list[j],list[i]];draw()});
+      const d=r.querySelector("[data-d]"); d.onclick=()=>{
+        const tgt=list[i===0?1:i-1];
+        if(!d.dataset.armed&&count(list[i][0])){d.dataset.armed=1;d.textContent="?";toast(`${count(list[i][0])} Einträge wandern nach „${tgt[1]}“. Nochmal tippen zum Löschen.`);return}
+        const k=list[i][0]; moves[k]=tgt[0]; Object.keys(moves).forEach(m=>{if(moves[m]===k)moves[m]=tgt[0]}); list.splice(i,1); draw();
+      };
+    });
+  }
+  draw();
+  q("#secAdd").onclick=()=>{const n=q("#secNew").value.trim();if(!n){toast("Bitte einen Namen eingeben.");return}list.push(["u_"+nid(),n]);q("#secNew").value="";draw()};
+  q("#secCancel").onclick=closeSheet;
+  q("#secSave").onclick=()=>{
+    if(list.some(a=>!a[1].trim())){toast("Jeder Abschnitt braucht einen Namen.");return}
+    J.cards.forEach(c=>{if(moves[c.sec])c.sec=moves[c.sec]});
+    J.secs[tab]=list.map(([k,n])=>[k,n.trim()]); save(); closeSheet(); renderAll(); toast("Abschnitte gespeichert");
+  };
 }
 
 /* ---------- Bearbeiten ---------- */
@@ -1679,6 +1776,7 @@ function editCard(c,isNew){
   const draft={...c,photos:[...(c.photos||[])]}; const removed=[];
   const host=openSheet(`<h3>${isNew?"Neuer Eintrag":"Eintrag bearbeiten"}</h3>
     <div class="jform">
+      <label class="ctl"><span class="ctl-label">Abschnitt</span><select id="jSec">${Object.keys(TAB_NAMES).map(t=>[TAB_NAMES[t],J.secs[t]]).map(([t,l])=>`<optgroup label="${t}">${l.map(([k,n])=>`<option value="${k}">${esc(n)}</option>`).join("")}</optgroup>`).join("")}</select></label>
       <input type="text" id="jTitle" placeholder="Titel, z. B. „Tempo vor Linie“" aria-label="Titel">
       <textarea id="jText" placeholder="Dein Gedanke oder deine Regel. Jede Zeile ein Punkt." aria-label="Text"></textarea>
       <div><div class="ctl-label" style="margin-bottom:6px">Bilder &amp; Skizzen</div><div class="jthumbs" id="jThumbs"></div>
@@ -1689,7 +1787,7 @@ function editCard(c,isNew){
       ${isNew?"":`<div class="save-line"><button class="btn" id="jArch">${c.arch?"Wiederherstellen":"Archivieren"}</button><button class="btn danger" id="jDel">Löschen</button></div>`}
     </div>`);
   const q=s=>host.querySelector(s);
-  q("#jTitle").value=draft.title; q("#jText").value=draft.text; q("#jActive").checked=draft.active;
+  q("#jSec").value=draft.sec; q("#jTitle").value=draft.title; q("#jText").value=draft.text; q("#jActive").checked=draft.active;
   async function drawThumbs(){
     const t=q("#jThumbs"); t.innerHTML=draft.photos.map((p,i)=>`<div class="jthumb"><img data-i="${i}" alt="${p.sk?"Skizze":"Foto"} ${i+1}"><button data-x="${i}" aria-label="Entfernen">×</button>${p.sk?`<button class="jedit" data-e="${i}">Bearbeiten</button>`:""}</div>`).join("");
     t.querySelectorAll("[data-e]").forEach(b=>b.onclick=()=>{const i=+b.dataset.e, old=draft.photos[i];
@@ -1706,7 +1804,7 @@ function editCard(c,isNew){
     b.disabled=false; b.textContent="Foto hinzufügen"; e.target.value=""; drawThumbs();
   };
   q("#jSave").onclick=()=>{
-    draft.title=q("#jTitle").value.trim(); draft.text=q("#jText").value.replace(/\s+$/,""); draft.active=q("#jActive").checked;
+    draft.sec=q("#jSec").value; draft.title=q("#jTitle").value.trim(); draft.text=q("#jText").value.replace(/\s+$/,""); draft.active=q("#jActive").checked;
     if(!draft.title&&!draft.text&&!draft.photos.length){toast("Bitte Titel oder Text eintragen.");return}
     const i=J.cards.findIndex(x=>x.id===draft.id); if(i>=0)J.cards[i]=draft; else J.cards.push(draft);
     removed.forEach(removePhoto); save(); closeSheet(); renderAll(); toast("Gespeichert");
