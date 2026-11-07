@@ -90,6 +90,9 @@ input[type=range].slope::-moz-range-track{background:linear-gradient(to right,va
 .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 .btn.ghost{background:transparent}
 .btn.outline{border-color:var(--accent);color:var(--accent);background:transparent}
+.backup{border:1.5px solid var(--warn);border-radius:var(--r);padding:12px;background:color-mix(in srgb,var(--warn) 10%,var(--surface));display:flex;flex-direction:column;gap:8px}
+.backup .ctl-label{color:var(--warn)}
+.btn.backup-b{background:var(--warn);border-color:var(--warn);color:#fff}
 .btn.danger{border-color:var(--warn);color:var(--warn);background:transparent}
 .btn:disabled{opacity:.45;cursor:default}
 
@@ -708,13 +711,6 @@ $("#btnSettings").addEventListener("click",()=>{
     <input type="range" id="stepCm" min="60" max="120" step="1" aria-label="Schrittlänge in Zentimetern">
     <div class="ctl-ends"><span>60 cm</span><span>120 cm</span></div></div>
     <p id="stepHint"></p>
-    <div class="ctl"><span class="ctl-label">Tabelle zurücksetzen</span>
-    <p>Ersetzt deine Schritt-Tabelle durch die Startwerte (10 cm bei 1 Schritt, +5 cm bis 10 Schritte, danach +2,5 cm). Die Meter-Tabelle folgt automatisch.</p>
-    <div class="save-line"><button class="btn danger" id="resetBtn">Auf Startwerte zurücksetzen</button></div></div>
-    <div class="ctl"><span class="ctl-label">Datensicherung</span>
-    <p>Deine Tabellen, Runden und dein Journal samt Fotos liegen nur auf diesem iPhone. Sichere sie ab und zu als Datei, z. B. in iCloud Drive.</p>
-    <div class="save-line"><button class="btn" id="bkOut">Sicherung speichern</button><button class="btn" id="bkIn">Sicherung laden</button></div>
-    <input type="file" id="bkFile" accept="application/json,.json" hidden></div>
     <button class="btn" id="setClose">Schließen</button>`);
   const r=host.querySelector("#refStimp"); r.value=S.refStimp; setRangeFill(r);
   const rv=host.querySelector("#refVal"); rv.textContent=fmtStimp(S.refStimp)+" Stimp";
@@ -722,12 +718,20 @@ $("#btnSettings").addEventListener("click",()=>{
   const sc=host.querySelector("#stepCm"), sv=host.querySelector("#stepVal"), sh=host.querySelector("#stepHint");
   const upd=()=>{sc.value=S.stepCm;setRangeFill(sc);sv.textContent=S.stepCm+" cm";sh.textContent=`1 Schritt = ${S.stepCm} cm, also 10 m ≈ ${fmt(1000/S.stepCm,1)} Schritte. Gilt für die Umrechnung in beiden Testrunden.`};
   upd(); sc.addEventListener("input",()=>{S.stepCm=+sc.value;upd();render();renderRound();saveSettings();window.dispatchEvent(new Event("pt:units"))});
-  const rb=host.querySelector("#resetBtn"); let armed=false;
-  rb.addEventListener("click",()=>{
-    if(!armed){armed=true;rb.textContent="Wirklich zurücksetzen? Nochmal tippen";return}
-    setCurBase(DEFAULT_STEPS.slice());editing=null;render();saveSettings(true);closeSheet();toast("Tabelle zurückgesetzt");
-  });
   host.querySelector("#setClose").addEventListener("click",closeSheet);
+});
+$("#btnInfo").addEventListener("click",()=>{
+  const host=openSheet(`<h3>So funktioniert's</h3>
+    <p><b>Tabelle:</b> Für jede Distanz steht, wie weit du den Putter bei deinem Metronom-Tempo zurückschwingst. Unter „Bearbeiten“ trägst du deine eigenen Werte ein, gemessen auf ebenem Grün. Du pflegst die Schritt-Tabelle; die Meter-Tabelle rechnet die App daraus über deine Schrittlänge um. Wie lang dein Schritt ist, stellst du unter dem Zahnrad ein; damit rechnet die App Meter in Schritte um.</p>
+    <p><b>Grün & Gefälle:</b> Ein schnelleres Grün macht den Putt kürzer, bergauf macht ihn länger. Die App zeigt, wie weit der Putt „spielt“, und liest den Ausholweg dafür aus deiner Tabelle ab. Pro Prozent Gefälle sind das bei 8 Stimp rund 11 % Länge, bei schnelleren Grüns mehr.</p>
+    <p><b>Metronom:</b> Drei hörbare Schläge – Ansprechen, Umkehrpunkt, Treffmoment –, danach die eingestellten stillen Schläge bis zum nächsten Putt.</p>
+    <p><b>Test:</b> Zufällige Distanzen wie auf einer echten Runde. Ab 3 m trägst du ein, wie weit der erste Putt kurz oder lang lag. „Tempo“ zählt erste Putts, die drin waren oder bis 45 cm hinter dem Loch liegen blieben. „vs. Tour“ vergleicht deine Putts mit dem Durchschnitt von Tourspielern auf denselben Distanzen.</p>
+    <div class="ctl backup"><span class="ctl-label">Datensicherung</span>
+    <p>Deine Tabellen, Runden und dein Journal samt Fotos liegen nur auf diesem iPhone. Sichere sie ab und zu als Datei, z. B. in iCloud Drive.</p>
+    <div class="save-line"><button class="btn backup-b" id="bkOut">Sicherung speichern</button><button class="btn backup-b" id="bkIn">Sicherung laden</button></div>
+    <input type="file" id="bkFile" accept="application/json,.json" hidden></div>
+    <button class="btn" id="infClose">Schließen</button>`);
+  host.querySelector("#infClose").addEventListener("click",closeSheet);
   host.querySelector("#bkOut").addEventListener("click",async()=>{
     const data={app:"putting-tempo",v:2,at:new Date().toISOString(),keys:{},photos:{}};
     try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith("pt."))data.keys[k]=localStorage.getItem(k)}}catch(e){}
@@ -744,15 +748,6 @@ $("#btnSettings").addEventListener("click",()=>{
       toast("Sicherung geladen");setTimeout(()=>location.reload(),600);
     }catch(e){toast("Die Datei ist keine gültige Sicherung.")}
   });
-});
-$("#btnInfo").addEventListener("click",()=>{
-  const host=openSheet(`<h3>So funktioniert's</h3>
-    <p><b>Tabelle:</b> Für jede Distanz steht, wie weit du den Putter bei deinem Metronom-Tempo zurückschwingst. Unter „Bearbeiten“ trägst du deine eigenen Werte ein, gemessen auf ebenem Grün. Du pflegst die Schritt-Tabelle; die Meter-Tabelle rechnet die App daraus über deine Schrittlänge um. Wie lang dein Schritt ist, stellst du unter dem Zahnrad ein; damit rechnet die App Meter in Schritte um.</p>
-    <p><b>Grün & Gefälle:</b> Ein schnelleres Grün macht den Putt kürzer, bergauf macht ihn länger. Die App zeigt, wie weit der Putt „spielt“, und liest den Ausholweg dafür aus deiner Tabelle ab. Pro Prozent Gefälle sind das bei 8 Stimp rund 11 % Länge, bei schnelleren Grüns mehr.</p>
-    <p><b>Metronom:</b> Drei hörbare Schläge – Ansprechen, Umkehrpunkt, Treffmoment –, danach die eingestellten stillen Schläge bis zum nächsten Putt.</p>
-    <p><b>Test:</b> Zufällige Distanzen wie auf einer echten Runde. Ab 3 m trägst du ein, wie weit der erste Putt kurz oder lang lag. „Tempo“ zählt erste Putts, die drin waren oder bis 45 cm hinter dem Loch liegen blieben. „vs. Tour“ vergleicht deine Putts mit dem Durchschnitt von Tourspielern auf denselben Distanzen.</p>
-    <button class="btn" id="infClose">Schließen</button>`);
-  host.querySelector("#infClose").addEventListener("click",closeSheet);
 });
 
 let sheetCleanup=null;
